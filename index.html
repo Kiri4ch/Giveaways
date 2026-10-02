@@ -1,0 +1,3583 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Twitch Giveaway — kiri4ch14</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    /* ============================================================
+       twitch giveaway — личный проект, тёмная тема с гифкой на фоне
+       ============================================================ */
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+        --bg-0: #0a0b0e;
+        --bg-1: #101114;
+        --bg-2: #16181d;
+        --bg-3: #1c1f26;
+        --line: #262931;
+        --line-soft: #1e2128;
+
+        --fg: #d4d8e0;
+        --fg-soft: #8a8f9a;
+        --fg-dim: #5a5f6b;
+
+        --accent: #7dd3a0;
+        --accent-dim: #4a8a68;
+        --accent-warn: #e5b567;
+        --accent-error: #e07a7a;
+        --accent-info: #7aa7d8;
+
+        --radius: 3px;
+        --radius-lg: 5px;
+    }
+
+    html, body { height: 100%; }
+
+    body {
+        background: var(--bg-0);
+        color: var(--fg);
+        font-family: 'Manrope', -apple-system, sans-serif;
+        font-size: 14px;
+        line-height: 1.55;
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+        padding: 32px 24px 64px;
+    }
+
+    /* ——— гифка на фоне ——— */
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url('https://i.pinimg.com/originals/8f/f9/2d/8ff92d2b0d0d72d26346e62cc39ee712.gif');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        z-index: -2;
+        filter: saturate(0.85) contrast(1.05);
+    }
+
+    body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(180deg,
+            rgba(10, 11, 14, 0.78) 0%,
+            rgba(10, 11, 14, 0.72) 50%,
+            rgba(10, 11, 14, 0.82) 100%);
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    /* ——— контейнер ——— */
+    .page {
+        max-width: 1280px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ——— шапка ——— */
+    .head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 32px;
+        margin-bottom: 32px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid var(--line);
+        flex-wrap: wrap;
+    }
+
+    .head-left { flex: 1; min-width: 240px; }
+
+    .head-title {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 800;
+        font-size: 26px;
+        letter-spacing: -0.5px;
+        line-height: 1.1;
+        margin-bottom: 8px;
+        color: var(--fg);
+        text-shadow: 0 1px 12px rgba(0,0,0,0.6);
+    }
+
+    .head-title .num {
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 400;
+        font-size: 12px;
+        color: var(--fg-dim);
+        margin-right: 10px;
+        vertical-align: middle;
+    }
+
+    .head-sub {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--fg-soft);
+        line-height: 1.7;
+    }
+
+    .head-sub .k { color: var(--fg-dim); margin-right: 6px; }
+    .head-sub .v { color: var(--accent); }
+
+    .head-right {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: var(--fg-dim);
+        text-align: right;
+        line-height: 1.8;
+        padding-top: 4px;
+    }
+
+    .head-right .live {
+        display: inline-block;
+        width: 6px; height: 6px;
+        background: var(--accent-error);
+        border-radius: 50%;
+        margin-right: 6px;
+        animation: pulse 2s infinite;
+        vertical-align: middle;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.35; }
+    }
+
+    /* ——— статус-линия ——— */
+    .status-line {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+        padding: 14px 18px;
+        background: rgba(16, 17, 20, 0.72);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        margin-bottom: 24px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+    }
+
+    .status-line > span {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--fg-soft);
+    }
+
+    .status-line .dot {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+    }
+    .status-line .dot.off { background: var(--fg-dim); }
+    .status-line .dot.warn { background: var(--accent-warn); }
+    .status-line strong { color: var(--fg); font-weight: 500; }
+
+    /* ——— строка таймеров ——— */
+    .timers-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+    @media (max-width: 900px) {
+        .timers-row { grid-template-columns: 1fr; }
+    }
+
+    .timer-box {
+        border: 1px solid var(--line);
+        background: rgba(16, 17, 20, 0.72);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .tb-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--fg-dim);
+        white-space: nowrap;
+    }
+
+    .tb-display {
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 700;
+        font-size: 26px;
+        color: var(--accent);
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 1px;
+        text-align: center;
+        flex: 1;
+        min-width: 140px;
+        line-height: 1;
+        text-shadow: 0 0 12px rgba(125, 211, 160, 0.35);
+        transition: color .2s, text-shadow .2s;
+    }
+
+    .tb-display.paused {
+        color: var(--accent-warn);
+        text-shadow: 0 0 12px rgba(229, 181, 103, 0.35);
+    }
+
+    .tb-display.stopped {
+        color: var(--fg-soft);
+        text-shadow: none;
+    }
+
+    .tb-display.timer-done {
+        color: var(--accent-error);
+        text-shadow: 0 0 14px rgba(224, 122, 122, 0.55);
+        animation: timerPulse 0.8s ease-in-out infinite;
+    }
+
+    @keyframes timerPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    .tb-controls { display: flex; gap: 6px; }
+
+    .tb-btn {
+        border: 1px solid var(--line);
+        background: rgba(10, 11, 14, 0.55);
+        color: var(--fg);
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 500;
+        font-size: 12px;
+        padding: 8px 12px;
+        border-radius: var(--radius);
+        cursor: pointer;
+        transition: all .15s;
+        min-width: 40px;
+        text-align: center;
+    }
+    .tb-btn:hover:not(:disabled) {
+        border-color: var(--accent-dim);
+        color: var(--accent);
+        background: rgba(125, 211, 160, 0.06);
+    }
+    .tb-btn:active:not(:disabled) { transform: translateY(1px); }
+    .tb-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .tb-input {
+        width: 52px;
+        background: rgba(10, 11, 14, 0.55);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        color: var(--fg);
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 700;
+        font-size: 16px;
+        text-align: center;
+        padding: 6px 4px;
+        outline: none;
+        font-variant-numeric: tabular-nums;
+    }
+    .tb-input:focus { border-color: var(--accent-dim); }
+    .tb-input::-webkit-outer-spin-button,
+    .tb-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .tb-input[type=number] { -moz-appearance: textfield; }
+
+    .tb-colon {
+        color: var(--fg-dim);
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 700;
+        font-size: 18px;
+        margin: 0 2px;
+    }
+
+    .tb-inputs { display: flex; align-items: center; flex: 1; justify-content: center; }
+
+    /* ——— сетка ——— */
+    .grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+    @media (max-width: 900px) {
+        .grid { grid-template-columns: 1fr; gap: 18px; }
+    }
+
+    /* ——— панель ——— */
+    .panel {
+        border: 1px solid var(--line);
+        background: rgba(16, 17, 20, 0.72);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: var(--radius);
+        padding: 18px 20px;
+        margin-bottom: 18px;
+    }
+    .panel:last-child { margin-bottom: 0; }
+
+    .panel-title {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--fg-dim);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .panel-title .idx { color: var(--fg-dim); font-weight: 400; }
+    .panel-title .name { color: var(--fg-soft); font-weight: 500; }
+
+    /* ——— поля ——— */
+    .field {
+        display: block;
+        width: 100%;
+        background: rgba(10, 11, 14, 0.65);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        color: var(--fg);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        padding: 11px 13px;
+        outline: none;
+        transition: border-color .15s, background .15s;
+    }
+    .field:focus {
+        border-color: var(--accent-dim);
+        background: rgba(22, 24, 29, 0.85);
+    }
+    .field::placeholder { color: var(--fg-dim); }
+
+    .field-label {
+        display: block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: var(--fg-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 6px;
+    }
+
+    .field-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+    }
+    .field-row:last-child { margin-bottom: 0; }
+    .field-row .field { flex: 1; min-width: 120px; }
+
+    /* ——— кнопки ——— */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: transparent;
+        border: 1px solid var(--line);
+        color: var(--fg);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        padding: 11px 16px;
+        border-radius: var(--radius);
+        cursor: pointer;
+        transition: all .15s;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+    .btn:hover:not(:disabled) {
+        border-color: var(--accent-dim);
+        color: var(--accent);
+        background: rgba(125, 211, 160, 0.06);
+    }
+    .btn:active:not(:disabled) { transform: translateY(1px); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-primary {
+        background: var(--accent);
+        color: var(--bg-0);
+        border-color: var(--accent);
+        font-weight: 700;
+    }
+    .btn-primary:hover:not(:disabled) {
+        background: #8ee0b1;
+        color: var(--bg-0);
+    }
+
+    .btn-danger {
+        color: var(--accent-error);
+        border-color: rgba(224, 122, 122, 0.3);
+    }
+    .btn-danger:hover:not(:disabled) {
+        background: rgba(224, 122, 122, 0.08);
+        border-color: var(--accent-error);
+        color: var(--accent-error);
+    }
+
+    .btn-ghost {
+        border-color: transparent;
+        color: var(--fg-soft);
+    }
+    .btn-ghost:hover:not(:disabled) {
+        color: var(--fg);
+        background: rgba(28, 31, 38, 0.7);
+        border-color: var(--line);
+    }
+
+    .btn-sm { padding: 8px 12px; font-size: 11px; }
+    .btn-block { width: 100%; }
+
+    /* ——— участники ——— */
+    .participants {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 12px;
+        background: rgba(10, 11, 14, 0.5);
+        border: 1px solid var(--line-soft);
+        border-radius: var(--radius);
+        min-height: 44px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+    }
+
+    .participant {
+        padding: 3px 9px;
+        background: rgba(22, 24, 29, 0.8);
+        border: 1px solid var(--line);
+        border-radius: 2px;
+        color: var(--fg-soft);
+    }
+    .participant::before {
+        content: '@';
+        color: var(--fg-dim);
+        margin-right: 2px;
+    }
+
+    /* ——— чат ——— */
+    .chat {
+        background: rgba(10, 11, 14, 0.5);
+        border: 1px solid var(--line-soft);
+        border-radius: var(--radius);
+        padding: 12px 14px;
+        height: 509px;
+        overflow-y: auto;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        margin-bottom: 12px;
+        line-height: 1.7;
+    }
+    .chat::-webkit-scrollbar,
+    .winner-messages::-webkit-scrollbar,
+    .winners-list::-webkit-scrollbar,
+    .log-section::-webkit-scrollbar { width: 6px; }
+    .chat::-webkit-scrollbar-track,
+    .winner-messages::-webkit-scrollbar-track,
+    .winners-list::-webkit-scrollbar-track,
+    .log-section::-webkit-scrollbar-track { background: transparent; }
+    .chat::-webkit-scrollbar-thumb,
+    .winner-messages::-webkit-scrollbar-thumb,
+    .winners-list::-webkit-scrollbar-thumb,
+    .log-section::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+
+    .chat-message {
+        display: flex;
+        gap: 8px;
+        padding: 3px 6px;
+        border-radius: 2px;
+        word-break: break-word;
+    }
+
+    .chat-user { color: var(--accent-info); flex-shrink: 0; }
+    .chat-text { color: var(--fg); }
+
+    .chat-message.highlight-winner {
+        background: rgba(125, 211, 160, 0.08);
+        border-left: 2px solid var(--accent);
+        padding-left: 8px;
+    }
+
+    .empty-state {
+        color: var(--fg-dim);
+        font-style: italic;
+        font-size: 12px;
+        padding: 16px 6px;
+        text-align: center;
+    }
+
+    /* ——— сообщения победителя ——— */
+    .winner-messages {
+        background: rgba(10, 11, 14, 0.5);
+        border: 1px solid var(--line-soft);
+        border-radius: var(--radius);
+        padding: 12px 14px;
+        height: 320px;
+        overflow-y: auto;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .winner-message-item {
+        display: flex;
+        gap: 8px;
+        padding: 3px 6px;
+        border-radius: 2px;
+        word-break: break-word;
+    }
+
+    /* ——— список победителей ——— */
+    .winners-list {
+        background: rgba(10, 11, 14, 0.5);
+        border: 1px solid var(--line-soft);
+        border-radius: var(--radius);
+        padding: 12px;
+        height: 320px;
+        overflow-y: auto;
+    }
+
+        .winner-card {
+        background: rgba(22, 24, 29, 0.7);
+        border: 1px solid var(--line-soft);
+        border-radius: var(--radius);
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        position: relative;
+        transition: transform .15s, border-color .15s;
+    }
+    .winner-card:last-child { margin-bottom: 0; }
+    .winner-card:hover {
+        border-color: var(--line);
+        transform: translateX(2px);
+    }
+
+    .winner-card .lb-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 6px;
+    }
+
+    .winner-card .lb-rank {
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--fg-dim);
+        min-width: 28px;
+        text-align: center;
+        padding: 2px 4px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+    }
+
+    .winner-card .lb-rank.rank-1 {
+        color: #ffd700;
+        border-color: #ffd700;
+        background: rgba(255, 215, 0, 0.08);
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.25);
+    }
+    .winner-card .lb-rank.rank-2 {
+        color: #c0c0c0;
+        border-color: #c0c0c0;
+        background: rgba(192, 192, 192, 0.06);
+    }
+    .winner-card .lb-rank.rank-3 {
+        color: #cd7f32;
+        border-color: #cd7f32;
+        background: rgba(205, 127, 50, 0.08);
+    }
+
+    .winner-card .lb-name {
+        flex: 1;
+        color: var(--fg);
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .winner-card .lb-sum {
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 700;
+        font-size: 13px;
+        color: var(--accent);
+    }
+
+    .winner-card .winner-details {
+        color: var(--fg-dim);
+        font-size: 11px;
+        line-height: 1.6;
+        margin-bottom: 8px;
+    }
+
+    .winner-card .winner-actions {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+    .btn-edit, .btn-delete {
+        padding: 5px 10px;
+        font-size: 10px;
+        border-radius: var(--radius);
+        border: 1px solid var(--line);
+        cursor: pointer;
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 500;
+        background: transparent;
+        color: var(--fg-soft);
+        transition: all .15s;
+    }
+    .btn-edit:hover {
+        border-color: var(--accent-dim);
+        color: var(--accent);
+    }
+    .btn-delete:hover {
+        border-color: var(--accent-error);
+        color: var(--accent-error);
+    }
+
+    .edit-form {
+        margin-top: 8px;
+        padding: 8px;
+        background: rgba(10, 11, 14, 0.6);
+        border-radius: var(--radius);
+        border: 1px solid var(--line-soft);
+    }
+    .edit-form input {
+        width: 100%;
+        padding: 6px 10px;
+        margin-bottom: 6px;
+        background: rgba(16, 17, 20, 0.8);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        font-size: 11px;
+        color: var(--fg);
+        outline: none;
+        font-family: 'JetBrains Mono', monospace;
+    }
+    .edit-form input:focus { border-color: var(--accent-dim); }
+
+    .btn-save {
+        padding: 6px 12px;
+        font-size: 11px;
+        border-radius: var(--radius);
+        border: 1px solid var(--accent-dim);
+        cursor: pointer;
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 500;
+        background: transparent;
+        color: var(--accent);
+        transition: all .15s;
+    }
+    .btn-save:hover { background: rgba(125, 211, 160, 0.08); }
+
+    /* ——— статистика ——— */
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        overflow: hidden;
+        margin-bottom: 24px;
+    }
+    @media (max-width: 700px) {
+        .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .stat-card {
+        background: rgba(16, 17, 20, 0.72);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: 16px 20px;
+    }
+
+    .stat-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--fg-dim);
+        margin-bottom: 6px;
+    }
+
+    .stat-value {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 24px;
+        letter-spacing: -0.5px;
+        color: var(--fg);
+        line-height: 1;
+    }
+    .stat-value.accent { color: var(--accent); }
+
+    /* ——— объявление победителя ——— */
+    .winner-announcement {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 16px 20px;
+        background: rgba(125, 211, 160, 0.08);
+        border: 1px solid var(--accent-dim);
+        border-radius: var(--radius);
+        margin: 18px 0;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        color: var(--fg-soft);
+        flex-wrap: wrap;
+    }
+    .winner-announcement span {
+        color: var(--accent);
+        font-weight: 700;
+        font-family: 'Manrope', sans-serif;
+        font-size: 18px;
+    }
+
+    /* ——— действия победителя ——— */
+    .winner-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 18px;
+    }
+
+    /* ——— форма приза ——— */
+    .prize-form {
+        display: none;
+        background: rgba(16, 17, 20, 0.72);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 20px;
+        margin-top: 18px;
+    }
+    .prize-form.active { display: block; }
+
+    .prize-form h3 {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--fg-dim);
+        margin-bottom: 16px;
+    }
+
+    .prize-form .form-row {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+    }
+    .prize-form .form-row label {
+        flex: 1;
+        min-width: 150px;
+        color: var(--fg-dim);
+        font-size: 11px;
+        font-family: 'JetBrains Mono', monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .prize-form .form-row input {
+        background: rgba(10, 11, 14, 0.65);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 10px 12px;
+        font-size: 13px;
+        color: var(--fg);
+        outline: none;
+        font-family: 'JetBrains Mono', monospace;
+        transition: border-color .15s;
+    }
+    .prize-form .form-row input:focus { border-color: var(--accent-dim); }
+
+    .btn-confirm-prize {
+        width: 100%;
+        padding: 12px;
+        font-size: 12px;
+    }
+
+    .confirmed-prize {
+        display: none;
+        background: rgba(125, 211, 160, 0.06);
+        border: 1px solid var(--accent-dim);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        margin-top: 14px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--accent);
+        text-align: center;
+    }
+    .confirmed-prize.active { display: block; }
+
+    /* ——— список сайтов ——— */
+    .site-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+    .site-btn {
+        padding: 10px 12px;
+        background: rgba(10, 11, 14, 0.55);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        color: var(--fg-soft);
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 12px;
+        font-family: 'JetBrains Mono', monospace;
+        transition: all .15s;
+    }
+    .site-btn:hover {
+        border-color: var(--accent-dim);
+        color: var(--accent);
+    }
+    .site-btn.selected {
+        background: rgba(125, 211, 160, 0.1);
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    /* ——— лог ——— */
+    .log-section {
+        background: rgba(16, 17, 20, 0.72);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 12px 16px;
+        margin-top: 18px;
+        max-height: 140px;
+        overflow-y: auto;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+    }
+    .log-entry {
+        padding: 3px 0;
+        border-bottom: 1px solid var(--line-soft);
+        color: var(--fg-soft);
+    }
+    .log-entry:last-child { border-bottom: none; }
+    .log-entry.log-join { color: var(--accent); }
+    .log-entry.log-winner { color: var(--accent-warn); }
+    .log-entry.log-error { color: var(--accent-error); }
+
+    /* ——— монетка ——— */
+    .coin-result {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+        margin: 18px 0;
+        background: rgba(16, 17, 20, 0.72);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+    }
+
+    .coin-animation {
+        display: inline-block;
+        animation: coinFlip 1s ease-in-out;
+    }
+
+    @keyframes coinFlip {
+        0% { transform: rotateY(0deg) rotateX(0deg); }
+        25% { transform: rotateY(180deg) rotateX(20deg); }
+        50% { transform: rotateY(360deg) rotateX(0deg); }
+        75% { transform: rotateY(540deg) rotateX(-20deg); }
+        100% { transform: rotateY(720deg) rotateX(0deg); }
+    }
+
+        .coin-texture {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 110px; height: 110px;
+        border-radius: 50%;
+        background: rgba(125, 211, 160, 0.08);
+        border: 3px solid var(--accent-dim);
+        overflow: hidden;
+        font-size: 64px;
+        line-height: 1;
+        transition: all .2s;
+    }
+    .coin-texture::before {
+        content: '👍';
+    }
+    .coin-texture.dislike {
+        background: rgba(224, 122, 122, 0.08);
+        border-color: var(--accent-error);
+    }
+    .coin-texture.dislike::before {
+        content: '👎';
+    }
+
+        .btn-coin-c {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 18px;
+        background: transparent;
+        border: 1px dashed var(--line);
+        border-radius: var(--radius);
+        color: var(--fg-soft);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        cursor: pointer;
+        transition: all .15s;
+        white-space: nowrap;
+    }
+    .btn-coin-c:hover {
+        border-style: solid;
+        border-color: var(--accent-dim);
+        color: var(--accent);
+        background: rgba(125, 211, 160, 0.04);
+    }
+    .btn-coin-c .ic {
+        display: inline-block;
+        transition: transform .4s cubic-bezier(.5, 1.6, .5, 1);
+    }
+    .btn-coin-c:hover .ic {
+        transform: rotate(360deg) scale(1.2);
+    }    .btn-coin-c {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 18px;
+        background: transparent;
+        border: 1px dashed var(--line);
+        border-radius: var(--radius);
+        color: var(--fg-soft);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        cursor: pointer;
+        transition: all .15s;
+        white-space: nowrap;
+    }
+    .btn-coin-c:hover {
+        border-style: solid;
+        border-color: var(--accent-dim);
+        color: var(--accent);
+        background: rgba(125, 211, 160, 0.04);
+    }
+    .btn-coin-c .ic {
+        display: inline-block;
+        transition: transform .4s cubic-bezier(.5, 1.6, .5, 1);
+    }
+    .btn-coin-c:hover .ic {
+        transform: rotate(360deg) scale(1.2);
+    }
+
+    /* ——— футер ——— */
+    .footer {
+        margin-top: 48px;
+        padding-top: 24px;
+        border-top: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: var(--fg-dim);
+    }
+    .footer a {
+        color: var(--fg-soft);
+        text-decoration: none;
+        border-bottom: 1px dashed var(--line);
+        transition: color .15s, border-color .15s;
+        margin-right: 16px;
+    }
+    .footer a:hover {
+        color: var(--accent);
+        border-bottom-color: var(--accent-dim);
+    }
+
+    /* ——— модальные окна ——— */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(6, 7, 9, 0.82);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        padding: 20px;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .modal-content {
+        background: rgba(22, 24, 29, 0.92);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        max-width: 400px;
+        width: 100%;
+        box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+    }
+
+    .modal-title {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        color: var(--fg);
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 14px;
+    }
+
+    .modal-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 12px 14px;
+        background: rgba(10, 11, 14, 0.55);
+        border: 1px solid var(--line-soft);
+        border-radius: var(--radius);
+        color: var(--fg);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all .15s;
+        margin-bottom: 6px;
+        text-align: left;
+    }
+    .modal-btn:hover {
+        border-color: var(--accent-dim);
+        background: rgba(125, 211, 160, 0.06);
+    }
+    .modal-btn::after {
+        content: '→';
+        color: var(--fg-dim);
+        font-size: 11px;
+    }
+    .modal-btn:hover::after { color: var(--accent); }
+
+    .modal-cancel {
+        width: 100%;
+        padding: 10px;
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        color: var(--fg-dim);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        cursor: pointer;
+        transition: all .15s;
+        margin-top: 8px;
+    }
+    .modal-cancel:hover { color: var(--fg); border-color: var(--fg-soft); }
+
+    /* ——— рулетка ——— */
+    .roulette-overlay {
+        position: fixed; inset: 0;
+        background: rgba(6, 7, 9, 0.94);
+        backdrop-filter: blur(10px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+        padding: 20px;
+    }
+    .roulette-overlay.active { display: flex; }
+
+    .roulette-container {
+        background: rgba(22, 24, 29, 0.95);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        padding: 28px;
+        max-width: 95vw;
+        text-align: center;
+    }
+
+    .roulette-title {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 20px;
+        color: var(--accent);
+        margin-bottom: 20px;
+        letter-spacing: -0.3px;
+    }
+
+    .roulette-controls {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--fg-soft);
+    }
+
+    .roulette-duration-input {
+        background: rgba(10, 11, 14, 0.7);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 9px 12px;
+        color: var(--fg);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        width: 80px;
+        text-align: center;
+        outline: none;
+    }
+    .roulette-duration-input:focus { border-color: var(--accent-dim); }
+
+    .roulette-window {
+        position: relative;
+        width: 700px;
+        max-width: 90vw;
+        height: 130px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(10, 11, 14, 0.7);
+        margin: 0 auto 20px;
+    }
+
+    .roulette-strip {
+        display: flex;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        white-space: nowrap;
+        will-change: transform;
+    }
+
+    .roulette-item {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 150px;
+        height: 90px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--fg);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(22, 24, 29, 0.7);
+        margin: 0 8px;
+        flex-shrink: 0;
+        font-family: 'JetBrains Mono', monospace;
+    }
+
+    .roulette-pointer {
+        position: absolute;
+        top: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0; height: 0;
+        border-left: 16px solid transparent;
+        border-right: 16px solid transparent;
+        border-top: 26px solid var(--accent);
+        z-index: 10;
+        filter: drop-shadow(0 0 8px rgba(125, 211, 160, 0.7));
+    }
+
+    .roulette-name {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 800;
+        font-size: 32px;
+        color: var(--accent);
+        letter-spacing: -0.5px;
+        min-height: 40px;
+    }
+
+    .roulette-participants {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--fg-dim);
+        margin-top: 8px;
+    }
+
+    .btn-spin {
+        background: var(--accent);
+        color: var(--bg-0);
+        border: 1px solid var(--accent);
+        padding: 11px 24px;
+        border-radius: var(--radius);
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 700;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all .15s;
+    }
+    .btn-spin:hover:not(:disabled) { background: #8ee0b1; }
+    .btn-spin:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ——— оверлеи игр ——— */
+    .zone-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(6, 7, 9, 0.96);
+        display: none;
+        flex-direction: column;
+        z-index: 3000;
+    }
+    .zone-overlay.active { display: flex; }
+
+    .zone-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 24px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(10, 11, 14, 0.6);
+        font-family: 'JetBrains Mono', monospace;
+    }
+
+    .zone-header-title {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--fg);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .zone-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        gap: 14px;
+        min-height: 0;
+    }
+
+    .zone-canvas-container {
+        position: relative;
+        width: min(1200px, 94vw);
+        height: calc(100vh - 230px);
+        max-height: 780px;
+        min-height: 380px;
+        background: rgba(10, 11, 14, 0.7);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        overflow: hidden;
+    }
+
+    #zoneCanvas, #brCanvas, #mazeCanvas, #raceCanvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+
+    .zone-controls {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .zone-btn {
+        padding: 11px 22px;
+        border-radius: var(--radius);
+        border: 1px solid var(--line);
+        cursor: pointer;
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 500;
+        font-size: 12px;
+        background: rgba(10, 11, 14, 0.55);
+        color: var(--fg);
+        transition: all .15s;
+    }
+    .zone-btn:hover:not(:disabled) {
+        border-color: var(--accent-dim);
+        color: var(--accent);
+        background: rgba(125, 211, 160, 0.06);
+    }
+    .zone-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .zone-btn-start {
+        background: var(--accent);
+        color: var(--bg-0);
+        border-color: var(--accent);
+        font-weight: 700;
+    }
+    .zone-btn-start:hover:not(:disabled) {
+        background: #8ee0b1;
+        color: var(--bg-0);
+    }
+
+    .zone-winner-name {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 800;
+        font-size: 26px;
+        color: var(--accent);
+        letter-spacing: -0.5px;
+        min-height: 32px;
+    }
+
+    .zone-status-text {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--fg-soft);
+    }
+
+    /* ——— таймер в шапке панели ——— */
+    .timer-inline {
+        display: none;
+        align-items: center;
+        gap: 6px;
+        background: rgba(125, 211, 160, 0.08);
+        border: 1px solid var(--accent-dim);
+        border-radius: var(--radius);
+        padding: 3px 10px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: var(--accent);
+    }
+    .timer-inline.active { display: inline-flex; }
+    .timer-inline .timer-value { font-weight: 700; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+    <div class="page">
+
+        <!-- ============ ШАПКА ============ -->
+        <header class="head">
+            <div class="head-left">
+                <h1 class="head-title">
+                    <span class="num">/ 01</span>
+                    Twitch Giveaway — <span id="channelName">kiri4ch14</span>
+                </h1>
+                <div class="head-sub">
+                    <span class="k">build</span><span class="v">v2.4.1</span> ·
+                    <span class="k">env</span><span class="v">production</span> ·
+                    <span class="k">updated</span><span class="v">just now</span>
+                </div>
+            </div>
+            <div class="head-right">
+                <div><span class="live"></span><span id="statusText">stream offline</span></div>
+                <div>uptime <span id="uptimeText">00:00:00</span></div>
+                <div>pid 8721</div>
+            </div>
+        </header>
+
+        <!-- ============ СТАТУС-ЛИНИЯ ============ -->
+        <div class="status-line">
+            <span><span class="dot off" id="statusDot"></span> twitch · <strong id="chatStatus">отключено</strong></span>
+            <span><span class="dot"></span> участников · <strong id="participantCount">0</strong></span>
+            <span><span class="dot"></span> сообщений · <strong id="messageCount">0</strong></span>
+            <span><span class="dot"></span> победителей · <strong id="winnersCount">0</strong></span>
+        </div>
+
+        <!-- ============ СЕКУНДОМЕР И ТАЙМЕР ============ -->
+        <div class="timers-row">
+            <div class="timer-box">
+                <span class="tb-label">⏱ секундомер</span>
+                <span class="tb-display stopped" id="gtDisplay">00:00:00</span>
+                <div class="tb-controls">
+                    <button class="tb-btn" id="gtStartBtn">▶</button>
+                    <button class="tb-btn" id="gtPauseBtn">❚❚</button>
+                    <button class="tb-btn" id="gtResetBtn">↺</button>
+                </div>
+            </div>
+            <div class="timer-box">
+                <span class="tb-label">⏳ таймер</span>
+                <div class="tb-inputs">
+                    <input type="number" class="tb-input" id="tmMinutes" value="5" min="0" max="99">
+                    <span class="tb-colon">:</span>
+                    <input type="number" class="tb-input" id="tmSeconds" value="0" min="0" max="59">
+                </div>
+                <span class="tb-display stopped" id="tmDisplay">05:00</span>
+                <div class="tb-controls">
+                    <button class="tb-btn" id="tmStartBtn">▶</button>
+                    <button class="tb-btn" id="tmPauseBtn">❚❚</button>
+                    <button class="tb-btn" id="tmResetBtn">↺</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ ПОДКЛЮЧЕНИЕ ============ -->
+        <div class="panel">
+            <div class="panel-title">
+                <span><span class="idx">02</span> · <span class="name">подключение</span></span>
+                <span class="dim">irc.chat.twitch.tv</span>
+            </div>
+            <div class="field-row">
+                <div style="flex:1;">
+                    <label class="field-label">канал</label>
+                    <input class="field" id="channelInput" value="kiri4ch14">
+                </div>
+                <div style="flex:1;">
+                    <label class="field-label">кодовое слово</label>
+                    <input class="field" id="codeWordInput" value="+">
+                </div>
+            </div>
+            <div class="field-row">
+                <button class="btn btn-primary" id="connectBtn">подключиться</button>
+                <button class="btn" id="pickWinnerBtn" disabled>выбрать победителя</button>
+                <button class="btn-coin-c" id="coinFlipBtn"><span class="ic">◐</span> монетка</button>
+                <button class="btn btn-danger" id="resetGiveawayBtn">сбросить</button>
+            </div>
+        </div>
+
+        <!-- ============ СТАТИСТИКА ============ -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">участников</div>
+                <div class="stat-value" id="participantCountBig">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">сообщений</div>
+                <div class="stat-value" id="messageCountBig">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">победитель</div>
+                <div class="stat-value" id="winnerNameBig">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">разыграно</div>
+                <div class="stat-value" id="totalGivenBig">0₽</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">выведено</div>
+                <div class="stat-value" id="totalWithdrawnBig">0₽</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">победителей</div>
+                <div class="stat-value accent" id="winnersCountBig">0</div>
+            </div>
+        </div>
+
+        <!-- ============ ОСНОВНАЯ СЕТКА ============ -->
+        <div class="grid">
+
+            <!-- ЛЕВАЯ КОЛОНКА -->
+            <div>
+              <!-- чат -->
+                <div class="panel">
+                    <div class="panel-title">
+                        <span><span class="idx">03</span> · <span class="name">чат</span></span>
+                        <span class="dim" id="chatStatusLabel">offline</span>
+                    </div>
+                    <div class="chat" id="chatLog"></div>
+                    <div class="field-row" style="margin-bottom:0;">
+                        <input class="field" placeholder="ник" id="userNameInput" value="test_user" style="flex:0 0 100px;">
+                        <input class="field" placeholder="сообщение" id="messageInput" value="+">
+                        <button class="btn" id="sendMessageBtn">→</button>
+                    </div>
+                </div>
+
+                <!-- участники -->
+                <div class="panel">
+                    <div class="panel-title">
+                        <span><span class="idx">04</span> · <span class="name">участники</span></span>
+                        <span class="dim" id="participantsCountLabel">0 / ∞</span>
+                    </div>
+                    <div class="participants" id="participantsList"></div>
+                </div>
+            </div>
+
+            <!-- ПРАВАЯ КОЛОНКА -->
+            <div>
+                <!-- сообщения победителя -->
+                <div class="panel">
+                    <div class="panel-title">
+                        <span><span class="idx">05</span> · <span class="name">сообщения победителя</span></span>
+                        <span class="timer-inline" id="timerInline">⏱ <span class="timer-value" id="timerInlineValue">0.0s</span></span>
+                    </div>
+                    <div class="winner-messages" id="winnerMessages">
+                        <div class="empty-state">победитель не выбран</div>
+                    </div>
+                </div>
+
+                <!-- лидерборд -->
+                <div class="panel">
+                    <div class="panel-title">
+                        <span><span class="idx">06</span> · <span class="name">лидерборд</span></span>
+                    </div>
+                    <div class="winners-list" id="winnersList">
+                        <div class="empty-state">нет данных</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ ОБЪЯВЛЕНИЕ ПОБЕДИТЕЛЯ ============ -->
+        <div class="winner-announcement" id="winnerDisplay" style="display:none;">
+            🏆 победитель: <span id="winnerNameDisplay">—</span>
+        </div>
+
+        <!-- ============ ДЕЙСТВИЯ ПОБЕДИТЕЛЯ ============ -->
+        <div class="winner-actions" id="winnerActions" style="display:none;">
+            <button class="btn" id="rerollBtn">🎲 рерол</button>
+            <button class="btn btn-primary" id="confirmWinnerBtn">✅ подтвердить победителя</button>
+            <button class="btn" id="checkWinnerBtn">🔍 проверка</button>
+        </div>
+
+        <!-- ============ ФОРМА ПРИЗА ============ -->
+        <div class="prize-form" id="prizeForm">
+            <h3>🎁 данные о победителе</h3>
+            <div class="form-row">
+                <label style="flex: 1.5;">
+                    сайт
+                    <div class="site-list" id="siteList">
+                        <button class="site-btn" data-site="DinoDrop">DinoDrop</button>
+                        <button class="site-btn" data-site="Jabka">Jabka</button>
+                        <button class="site-btn" data-site="SkinBro">SkinBro</button>
+                        <button class="site-btn" data-site="SkinHouse">SkinHouse</button>
+                    </div>
+                </label>
+                <label style="flex: 1;">
+                    сумма (руб)
+                    <input type="number" id="prizeAmount" placeholder="например 1000">
+                </label>
+                <label style="flex: 1;">
+                    телеграм username
+                    <input type="text" id="tgUsernameInput" placeholder="@username">
+                </label>
+            </div>
+            <button class="btn btn-primary btn-confirm-prize" id="confirmPrizeBtn">✅ подтвердить приз</button>
+        </div>
+
+        <div class="confirmed-prize" id="confirmedPrize">🎁 <span id="confirmedPrizeText"></span></div>
+
+        <!-- ============ МОНЕТКА ============ -->
+        <div class="coin-result" id="coinResultDiv" style="display:none;">
+            <span class="coin-animation" id="coinAnimation"><span class="coin-texture" id="coinTexture"></span></span>
+        </div>
+
+        <!-- ============ ЛОГ ============ -->
+        <div class="log-section" id="logSection">
+            <div class="log-entry">готов к работе · подключитесь к каналу</div>
+        </div>
+
+        <!-- ============ ФУТЕР ============ -->
+        <footer class="footer">
+            <div>
+                <a href="https://t.me/kiri4ch14" target="_blank">telegram</a>
+                <a href="https://www.twitch.tv/kiri4ch14" target="_blank">twitch</a>
+            </div>
+            <div>© 2026 · kiri4ch14</div>
+        </footer>
+    </div>
+
+    <!-- ============ МОДАЛКА ВЫБОРА ПОБЕДИТЕЛЯ ============ -->
+    <div class="modal-overlay" id="winnerModal">
+        <div class="modal-content">
+            <div class="modal-title">как выбрать победителя?</div>
+            <button class="modal-btn" onclick="pickRandomWinner()">🎲 случайный выбор</button>
+            <button class="modal-btn" onclick="pickNonWinner()">🆕 среди тех кто не выигрывал</button>
+            <button class="modal-btn" onclick="openRoulette()">🎰 рулетка</button>
+            <button class="modal-btn" onclick="openZoneMode()">🔴 зона</button>
+            <button class="modal-btn" onclick="openBattleRoyal()">⚔️ батл рояль</button>
+            <button class="modal-btn" onclick="openMazeMode()">🌀 лабиринт</button>
+            <button class="modal-btn" onclick="openRaceMode()">🏁 гонка</button>
+            <button class="modal-cancel" onclick="closeModal()">отмена</button>
+        </div>
+    </div>
+
+    <!-- ============ РУЛЕТКА ============ -->
+    <div class="roulette-overlay" id="rouletteOverlay">
+        <div class="roulette-container">
+            <div class="roulette-title">🎰 рулетка</div>
+            <div class="roulette-controls">
+                <input type="number" class="roulette-duration-input" id="rouletteDuration" value="15" min="1" max="60">
+                <span>секунд</span>
+                <button class="btn-spin" id="spinButton">крутить</button>
+            </div>
+            <div class="roulette-window">
+                <div class="roulette-pointer"></div>
+                <div class="roulette-strip" id="rouletteStrip"></div>
+            </div>
+            <div class="roulette-name" id="rouletteWinner"></div>
+            <div class="roulette-participants" id="rouletteParticipants"></div>
+        </div>
+    </div>
+
+    <!-- ============ ЗОНА ============ -->
+    <div class="zone-overlay" id="zoneOverlay">
+        <div class="zone-header">
+            <div class="zone-header-title">🔴 зона</div>
+            <button class="zone-btn" id="zoneCloseBtn">✕ закрыть</button>
+        </div>
+        <div class="zone-body">
+            <div class="zone-canvas-container">
+                <canvas id="zoneCanvas"></canvas>
+            </div>
+            <div class="zone-controls">
+                <button class="zone-btn zone-btn-start" id="zoneStartBtn">▶ запустить зону</button>
+            </div>
+            <div class="zone-winner-name" id="zoneWinnerName"></div>
+            <div class="zone-status-text" id="zoneStatusText">нажмите "запустить зону"</div>
+        </div>
+    </div>
+
+    <!-- ============ БАТЛ РОЯЛЬ ============ -->
+    <div class="zone-overlay" id="battleOverlay">
+        <div class="zone-header">
+            <div class="zone-header-title">⚔️ батл рояль</div>
+            <button class="zone-btn" id="brCloseBtn">✕ закрыть</button>
+        </div>
+        <div class="zone-body">
+            <div class="zone-canvas-container">
+                <canvas id="brCanvas"></canvas>
+            </div>
+            <div class="zone-controls">
+                <button class="zone-btn zone-btn-start" id="brStartBtn">▶ начать битву</button>
+                <button class="zone-btn" id="brResetBtn">↺ сброс</button>
+            </div>
+            <div class="zone-winner-name" id="brWinnerName"></div>
+            <div class="zone-status-text" id="brStatusText">нажмите "начать битву"</div>
+        </div>
+    </div>
+
+    <!-- ============ ЛАБИРИНТ ============ -->
+    <div class="zone-overlay" id="mazeOverlay">
+        <div class="zone-header">
+            <div class="zone-header-title">🌀 лабиринт</div>
+            <button class="zone-btn" id="mazeCloseBtn">✕ закрыть</button>
+        </div>
+        <div class="zone-body">
+            <div class="zone-canvas-container">
+                <canvas id="mazeCanvas"></canvas>
+            </div>
+            <div class="zone-controls">
+                <button class="zone-btn zone-btn-start" id="mazeStartBtn">▶ запустить лабиринт</button>
+            </div>
+            <div class="zone-winner-name" id="mazeWinnerName"></div>
+            <div class="zone-status-text" id="mazeStatusText">нажмите "запустить лабиринт"</div>
+        </div>
+    </div>
+
+    <!-- ============ ГОНКА ============ -->
+    <div class="zone-overlay" id="raceOverlay">
+        <div class="zone-header">
+            <div class="zone-header-title">🏁 гонка</div>
+            <button class="zone-btn" id="raceCloseBtn">✕ закрыть</button>
+        </div>
+        <div class="zone-body">
+            <div class="zone-canvas-container">
+                <canvas id="raceCanvas"></canvas>
+            </div>
+            <div class="zone-controls">
+                <button class="zone-btn zone-btn-start" id="raceStartBtn">▶ начать гонку</button>
+            </div>
+            <div class="zone-winner-name" id="raceWinnerName"></div>
+            <div class="zone-status-text" id="raceStatusText">нажмите "начать гонку"</div>
+        </div>
+    </div>
+
+<script>
+
+        (function() {
+            let participants = [];
+            let chatHistory = [];
+            let currentWinner = null;
+            let ws = null;
+            let coinAnimating = false;
+            let isWinnerConfirmed = false;
+            let winners = [];
+            let selectedSite = '';
+            let codeWord = '+';
+            let channelName = 'kiri4ch14';
+            const STORAGE_KEY = 'twitch_giveaway_winners';
+            const MAX_LOG_ENTRIES = 100;
+            let timerInterval = null;
+            let timerStartTime = null;
+            let timerRunning = false;
+            let rouletteSpinning = false;
+            let uptimeStart = Date.now();
+
+            // Zone
+            let zonePlayers = [];
+            let zoneGameRunning = false;
+            let zoneCurrentRound = 0;
+            let zoneWinner = null;
+            let zoneAnimationActive = false;
+            const ZONE_RADIUS = 0.25;
+            const PLAYER_DOT_SIZE = 6;
+            const WINNER_DOT_SIZE = 9;
+            const DEAD_DOT_SIZE = 4;
+            const PLAYER_FONT_SIZE = 9;
+            const WINNER_FONT_SIZE = 12;
+            let zone = {
+                targetX: 0.5, targetY: 0.5, targetRadius: ZONE_RADIUS,
+                currentX: 0.5, currentY: 0.5, currentRadius: ZONE_RADIUS,
+                animating: false, progress: 0, duration: 2000,
+                startX: 0.5, startY: 0.5, startRadius: ZONE_RADIUS, phase: 'idle'
+            };
+            let zoneCanvas, zoneCtx;
+
+            // Battle Royale
+            let brCanvas, brCtx;
+            let brRunning = false;
+            let brDone = false;
+            let brAnimActive = false;
+            let brLast = 0;
+            let brT = 0;
+            let brSpeed = 1;
+            let brWinner = null;
+            const BR_RAD = 14, BR_SPEED = 60, BR_RANGE = BR_RAD*2+6, BR_CD = 0.7, BR_DMG = 12;
+            const BR_MAXHP = 100, BR_MAXSH = 50, BR_MAXAR = 0.5;
+            const BR_HEAL = 30, BR_SH = 30, BR_LOWHP = 0.25;
+            const BR_ZONE_DMG = 25, BR_ZONE_TICK = 2;
+            let brFighters = [];
+            let brPickups = [];
+            let brObstacles = [];
+            let brZone = { r: 2, targetR: 2, cx: 0.5, cy: 0.5, active: false, startDelay: 10 };
+
+            // Maze
+            let mazeCanvas, mazeCtx;
+            let mazeAnimationActive = false;
+            let mazeRunning = false;
+            let mazeGrid = [];
+            let mazePlayers = [];
+            let mazeWinner = null;
+            let mazeCellSize = 0;
+            let mazeCols = 15;
+            let mazeRows = 11;
+            let mazeTraps = [];
+
+            // Race
+            let raceCanvas, raceCtx;
+            let raceAnimationActive = false;
+            let raceRunning = false;
+            let raceRunners = [];
+            let raceWinner = null;
+            let raceTotalLength = 0;
+            let raceTrack = [];
+            let raceAnimLastTime = 0;
+
+            // Timers
+            let gtInterval = null;
+            let gtStartTime = 0;
+            let gtElapsed = 0;
+            let gtRunning = false;
+            let tmInterval = null;
+            let tmRemaining = 0;
+            let tmEndTime = 0;
+            let tmRunning = false;
+
+            const $ = (id) => document.getElementById(id);
+
+            const chatLogDiv = $('chatLog');
+            const participantsListDiv = $('participantsList');
+            const participantCountSpan = $('participantCount');
+            const messageCountSpan = $('messageCount');
+            const winnerNameSpan = $('winnerName');
+            const winnersCountSpan = $('winnersCount');
+            const totalGivenSpan = $('totalGiven');
+            const totalWithdrawnSpan = $('totalWithdrawn');
+            const winnerDisplayDiv = $('winnerDisplay');
+            const winnerNameDisplaySpan = $('winnerNameDisplay');
+            const winnerMessagesDiv = $('winnerMessages');
+            const winnersListDiv = $('winnersList');
+            const coinResultDiv = $('coinResultDiv');
+            const coinAnimationSpan = $('coinAnimation');
+            const coinTextureSpan = $('coinTexture');
+            const statusDot = $('statusDot');
+            const statusText = $('statusText');
+            const chatStatusSpan = $('chatStatus');
+            const winnerActionsDiv = $('winnerActions');
+            const rerollBtn = $('rerollBtn');
+            const confirmWinnerBtn = $('confirmWinnerBtn');
+            const checkWinnerBtn = $('checkWinnerBtn');
+            const prizeFormDiv = $('prizeForm');
+            const tgUsernameInput = $('tgUsernameInput');
+            const prizeAmountInput = $('prizeAmount');
+            const confirmPrizeBtn = $('confirmPrizeBtn');
+            const confirmedPrizeDiv = $('confirmedPrize');
+            const confirmedPrizeTextSpan = $('confirmedPrizeText');
+            const siteListDiv = $('siteList');
+            const codeWordInput = $('codeWordInput');
+            const channelInput = $('channelInput');
+            const channelNameSpan = $('channelName');
+            const logSection = $('logSection');
+            const winnerModal = $('winnerModal');
+            const rouletteOverlay = $('rouletteOverlay');
+            const rouletteStrip = $('rouletteStrip');
+            const rouletteWinner = $('rouletteWinner');
+            const rouletteParticipants = $('rouletteParticipants');
+            const spinButton = $('spinButton');
+            const rouletteDuration = $('rouletteDuration');
+            const zoneOverlay = $('zoneOverlay');
+            const zoneStartBtn = $('zoneStartBtn');
+            const zoneCloseBtn = $('zoneCloseBtn');
+            const zoneWinnerName = $('zoneWinnerName');
+            const zoneStatusText = $('zoneStatusText');
+            zoneCanvas = $('zoneCanvas');
+            zoneCtx = zoneCanvas.getContext('2d');
+            const timerInline = $('timerInline');
+            const timerInlineValue = $('timerInlineValue');
+
+            const battleOverlay = $('battleOverlay');
+            const brCloseBtn = $('brCloseBtn');
+            const brStartBtn = $('brStartBtn');
+            const brResetBtn = $('brResetBtn');
+            const brWinnerName = $('brWinnerName');
+            const brStatusText = $('brStatusText');
+            brCanvas = $('brCanvas');
+            brCtx = brCanvas.getContext('2d');
+
+            const mazeOverlay = $('mazeOverlay');
+            const mazeCloseBtn = $('mazeCloseBtn');
+            const mazeStartBtn = $('mazeStartBtn');
+            const mazeWinnerName = $('mazeWinnerName');
+            const mazeStatusText = $('mazeStatusText');
+            mazeCanvas = $('mazeCanvas');
+            mazeCtx = mazeCanvas.getContext('2d');
+
+            const raceOverlay = $('raceOverlay');
+            const raceCloseBtn = $('raceCloseBtn');
+            const raceStartBtn = $('raceStartBtn');
+            const raceWinnerName = $('raceWinnerName');
+            const raceStatusText = $('raceStatusText');
+            raceCanvas = $('raceCanvas');
+            raceCtx = raceCanvas.getContext('2d');
+
+            const userNameInput = $('userNameInput');
+            const messageInput = $('messageInput');
+            const sendMessageBtn = $('sendMessageBtn');
+            const connectBtn = $('connectBtn');
+            const pickWinnerBtn = $('pickWinnerBtn');
+            const coinFlipBtn = $('coinFlipBtn');
+            const resetGiveawayBtn = $('resetGiveawayBtn');
+
+            const gtDisplay = $('gtDisplay');
+            const gtStartBtn = $('gtStartBtn');
+            const gtPauseBtn = $('gtPauseBtn');
+            const gtResetBtn = $('gtResetBtn');
+
+            const tmDisplay = $('tmDisplay');
+            const tmMinutes = $('tmMinutes');
+            const tmSeconds = $('tmSeconds');
+            const tmStartBtn = $('tmStartBtn');
+            const tmPauseBtn = $('tmPauseBtn');
+            const tmResetBtn = $('tmResetBtn');
+
+            // === функции общего назначения ===
+            function startTimer() { stopTimer(); timerRunning = true; timerStartTime = Date.now(); timerInline.classList.add('active'); timerInterval = setInterval(() => { const elapsed = (Date.now() - timerStartTime) / 1000; timerInlineValue.textContent = elapsed.toFixed(1) + 's'; }, 100); }
+            function stopTimer() { if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } timerRunning = false; }
+            function resetTimer() { stopTimer(); timerInline.classList.remove('active'); timerInlineValue.textContent = '0.0s'; }
+            function addLogEntry(message, type = 'normal') {
+                const logEntry = document.createElement('div');
+                logEntry.className = `log-entry log-${type}`;
+                logEntry.textContent = message;
+                logSection.appendChild(logEntry);
+                while (logSection.children.length > MAX_LOG_ENTRIES && logSection.firstChild) {
+                    logSection.removeChild(logSection.firstChild);
+                }
+                logSection.scrollTop = logSection.scrollHeight;
+            }
+            function setConnectionStatus(state) {
+                statusDot.className = 'status-dot';
+                statusDot.style.cssText = 'width:6px;height:6px;border-radius:50%;';
+                switch(state) {
+                    case 'connected':
+                        statusDot.style.background = 'var(--accent)';
+                        statusText.textContent = 'stream online';
+                        chatStatusSpan.textContent = 'online';
+                        $('chatStatusLabel').textContent = 'live';
+                        break;
+                    case 'connecting':
+                        statusDot.style.background = 'var(--accent-warn)';
+                        statusText.textContent = 'connecting...';
+                        chatStatusSpan.textContent = 'connecting';
+                        $('chatStatusLabel').textContent = 'connecting';
+                        break;
+                    case 'disconnected':
+                        statusDot.style.background = 'var(--fg-dim)';
+                        statusText.textContent = 'stream offline';
+                        chatStatusSpan.textContent = 'отключено';
+                        $('chatStatusLabel').textContent = 'offline';
+                        break;
+                    case 'error':
+                        statusDot.style.background = 'var(--accent-error)';
+                        statusText.textContent = 'connection error';
+                        chatStatusSpan.textContent = 'ошибка';
+                        $('chatStatusLabel').textContent = 'error';
+                        break;
+                }
+            }
+            function saveWinnersToStorage() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(winners)); } catch(e) {} }
+            function loadWinnersFromStorage() { try { const stored = localStorage.getItem(STORAGE_KEY); if (stored) winners = JSON.parse(stored); } catch(e) { winners = []; } }
+            function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+
+            function updateStats() {
+                const pCount = participants.length;
+                const mCount = chatHistory.filter(msg => !msg.isSystem).length;
+                const wCount = winners.length;
+                const totalGiven = winners.reduce((sum, w) => sum + w.amount, 0);
+                const totalWithdrawn = winners.reduce((sum, w) => sum + (w.withdrawn || 0), 0);
+
+                participantCountSpan.textContent = pCount;
+                messageCountSpan.textContent = mCount;
+                winnersCountSpan.textContent = wCount;
+
+                $('participantCountBig').textContent = pCount;
+                $('messageCountBig').textContent = mCount;
+                $('winnerNameBig').textContent = currentWinner || '—';
+                $('totalGivenBig').textContent = totalGiven + '₽';
+                $('totalWithdrawnBig').textContent = totalWithdrawn + '₽';
+                $('winnersCountBig').textContent = wCount;
+
+                $('participantsCountLabel').textContent = pCount + ' / ∞';
+
+                pickWinnerBtn.disabled = pCount === 0;
+            }
+
+            function renderChat() {
+                let html = '';
+                const userMessages = chatHistory.filter(msg => !msg.isSystem);
+                if (userMessages.length === 0) {
+                    html = '<div class="empty-state">— чат пуст —</div>';
+                } else {
+                    userMessages.forEach(msg => {
+                        let cls = 'chat-message';
+                        if (currentWinner && msg.username.toLowerCase() === currentWinner.toLowerCase()) cls += ' highlight-winner';
+                        html += `<div class="${cls}"><span class="chat-user">@${escapeHtml(msg.username)}</span><span class="chat-text">${escapeHtml(msg.text)}</span></div>`;
+                    });
+                }
+                chatLogDiv.innerHTML = html;
+                chatLogDiv.scrollTop = chatLogDiv.scrollHeight;
+            }
+
+            function renderParticipantsBadges() {
+                let html = '';
+                if (participants.length === 0) {
+                    html = '<div class="empty-state" style="width:100%;">— пусто —</div>';
+                } else {
+                    participants.forEach(p => {
+                        html += `<span class="participant">${escapeHtml(p.username)}</span>`;
+                    });
+                }
+                participantsListDiv.innerHTML = html;
+            }
+
+            function renderWinnerMessages() {
+                if (!currentWinner) {
+                    winnerMessagesDiv.innerHTML = '<div class="empty-state">победитель не выбран</div>';
+                    return;
+                }
+                const msgs = chatHistory.filter(msg => !msg.isSystem && msg.username.toLowerCase() === currentWinner.toLowerCase());
+                if (msgs.length === 0) {
+                    winnerMessagesDiv.innerHTML = `<div class="empty-state">у победителя @${escapeHtml(currentWinner)} пока нет сообщений</div>`;
+                } else {
+                    let html = '';
+                    msgs.forEach(msg => {
+                        html += `<div class="winner-message-item"><span class="chat-user">@${escapeHtml(msg.username)}</span><span class="chat-text">${escapeHtml(msg.text)}</span></div>`;
+                    });
+                    winnerMessagesDiv.innerHTML = html;
+                }
+            }
+
+                        function renderWinners() {
+                if (winners.length === 0) {
+                    winnersListDiv.innerHTML = '<div class="empty-state">нет данных</div>';
+                    return;
+                }
+                const sorted = [...winners].sort((a, b) => (b.withdrawn || 0) - (a.withdrawn || 0));
+                let html = '';
+                sorted.forEach((winner, idx) => {
+                    const rank = idx + 1;
+                    const rankCls = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
+                    html += `<div class="winner-card" data-winner-id="${winner.id}">
+                        <div class="lb-row">
+                            <div class="lb-rank ${rankCls}">#${rank}</div>
+                            <div class="lb-name">@${escapeHtml(winner.username)}</div>
+                            <div class="lb-sum">${winner.withdrawn || 0}₽</div>
+                        </div>
+                        <div class="winner-details">tg: ${escapeHtml(winner.tgUsername || '—')}<br>${escapeHtml(winner.site)} · Деп ${winner.amount}₽</div>
+                        <div class="winner-actions">
+                            <button class="btn-edit" data-action="edit" data-id="${winner.id}">edit</button>
+                            <button class="btn-delete" data-action="delete" data-id="${winner.id}">delete</button>
+                        </div>
+                        <div class="edit-form" id="editForm-${winner.id}" style="display:none;">
+                            <input type="text" id="editTgUsername-${winner.id}" value="${escapeHtml(winner.tgUsername || '')}" placeholder="tg username">
+                            <input type="text" id="editSite-${winner.id}" value="${escapeHtml(winner.site)}" placeholder="сайт">
+                            <input type="number" id="editAmount-${winner.id}" value="${winner.amount}" placeholder="сумма розыгрыша">
+                            <input type="number" id="editWithdrawn-${winner.id}" value="${winner.withdrawn || ''}" placeholder="вывод ₽">
+                            <button class="btn-save" data-action="save" data-id="${winner.id}">save</button>
+                        </div>
+                    </div>`;
+                });
+                winnersListDiv.innerHTML = html;
+                winnersListDiv.scrollTop = 0;
+            }
+
+            function addChatMessage(username, text, isSystem = false) {
+                const cleanUsername = username.trim() || 'anon';
+                const cleanText = text.trim();
+                if (cleanText === '' && !isSystem) return;
+                if (timerRunning && !isSystem && currentWinner && cleanUsername.toLowerCase() === currentWinner.toLowerCase()) {
+                    stopTimer();
+                    addLogEntry(`⏱ таймер остановлен на ${timerInlineValue.textContent} · сообщение от победителя`, 'winner');
+                }
+                const newMessage = { username: cleanUsername, text: cleanText, isSystem, timestamp: Date.now() };
+                chatHistory.push(newMessage);
+                if (!isSystem) {
+                    if (codeWord.length > 0 && cleanText.includes(codeWord)) {
+                        const already = participants.some(p => p.username.toLowerCase() === cleanUsername.toLowerCase());
+                        if (!already) {
+                            participants.push({ username: cleanUsername, message: cleanText, timestamp: Date.now() });
+                            addLogEntry(`+ @${cleanUsername} присоединился`, 'join');
+                        }
+                    }
+                }
+                updateStats(); renderChat(); renderParticipantsBadges(); renderWinnerMessages();
+            }
+
+            function resetGiveaway() {
+                participants = [];
+                currentWinner = null;
+                isWinnerConfirmed = false;
+                winnerDisplayDiv.style.display = 'none';
+                coinResultDiv.style.display = 'none';
+                winnerActionsDiv.style.display = 'none';
+                prizeFormDiv.classList.remove('active');
+                confirmedPrizeDiv.classList.remove('active');
+                winnerMessagesDiv.innerHTML = '<div class="empty-state">победитель не выбран</div>';
+                resetTimer();
+                saveWinnersToStorage();
+                updateStats(); renderChat(); renderParticipantsBadges(); renderWinnerMessages(); renderWinners();
+                addLogEntry('↺ список участников очищен', 'winner');
+            }
+
+            function setWinner(winnerUsername) {
+                currentWinner = winnerUsername;
+                winnerNameDisplaySpan.textContent = winnerUsername;
+                winnerDisplayDiv.style.display = 'flex';
+                winnerActionsDiv.style.display = 'flex';
+                isWinnerConfirmed = false;
+                prizeFormDiv.classList.remove('active');
+                confirmedPrizeDiv.classList.remove('active');
+                selectedSite = '';
+                startTimer();
+                addLogEntry(`🏆 победитель: @${winnerUsername}`, 'winner');
+                updateStats(); renderChat(); renderParticipantsBadges(); renderWinnerMessages();
+            }
+
+            function showWinnerModal() {
+                if (participants.length === 0) { alert('нет участников'); return; }
+                winnerModal.classList.add('active');
+            }
+            function closeModal() { winnerModal.classList.remove('active'); }
+            function pickRandomWinner() {
+                closeModal();
+                const i = Math.floor(Math.random() * participants.length);
+                setWinner(participants[i].username);
+            }
+            function pickNonWinner() {
+                closeModal();
+                const nonWinners = participants.filter(p => !winners.some(w => w.username.toLowerCase() === p.username.toLowerCase()));
+                if (nonWinners.length === 0) { alert('все уже выигрывали'); return; }
+                const i = Math.floor(Math.random() * nonWinners.length);
+                setWinner(nonWinners[i].username);
+            }
+
+            function checkWinner() {
+                if (!currentWinner) { alert('сначала выберите победителя'); return; }
+                window.open(`https://followage.showmasterokda.com/?user=${encodeURIComponent(currentWinner)}`, '_blank');
+                addLogEntry(`🔍 проверка победителя @${currentWinner}`);
+            }
+
+            // ===== СЕКУНДОМЕР =====
+            function gtFormat(ms) {
+                const s = Math.floor(ms / 1000);
+                const h = String(Math.floor(s / 3600)).padStart(2, '0');
+                const m = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+                const sec = String(s % 60).padStart(2, '0');
+                return `${h}:${m}:${sec}`;
+            }
+            function gtRender() { gtDisplay.textContent = gtFormat(gtElapsed); }
+            function gtTick() { if (!gtRunning) return; gtElapsed = Date.now() - gtStartTime; gtRender(); }
+            function gtStart() {
+                if (gtRunning) return;
+                gtRunning = true;
+                gtStartTime = Date.now() - gtElapsed;
+                gtInterval = setInterval(gtTick, 100);
+                gtDisplay.classList.remove('paused', 'stopped');
+                gtStartBtn.disabled = true;
+                gtPauseBtn.disabled = false;
+                gtTick();
+            }
+            function gtPause() {
+                if (!gtRunning) return;
+                gtRunning = false;
+                if (gtInterval) { clearInterval(gtInterval); gtInterval = null; }
+                gtDisplay.classList.add('paused');
+                gtDisplay.classList.remove('stopped');
+                gtStartBtn.disabled = false;
+                gtPauseBtn.disabled = true;
+            }
+            function gtReset() {
+                gtRunning = false;
+                if (gtInterval) { clearInterval(gtInterval); gtInterval = null; }
+                gtElapsed = 0;
+                gtRender();
+                gtDisplay.classList.remove('paused');
+                gtDisplay.classList.add('stopped');
+                gtStartBtn.disabled = false;
+                gtPauseBtn.disabled = true;
+            }
+
+            // ===== ТАЙМЕР =====
+            function tmFormat(ms) {
+                const s = Math.max(0, Math.ceil(ms / 1000));
+                return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+            }
+            function tmRender() { tmDisplay.textContent = tmFormat(tmRemaining); }
+            function tmTick() {
+                if (!tmRunning) return;
+                tmRemaining = tmEndTime - Date.now();
+                if (tmRemaining <= 0) { tmRemaining = 0; tmRender(); tmFinish(); return; }
+                tmRender();
+            }
+            function tmGetInput() {
+                const m = Math.max(0, Math.min(99, parseInt(tmMinutes.value) || 0));
+                const s = Math.max(0, Math.min(59, parseInt(tmSeconds.value) || 0));
+                return (m * 60 + s) * 1000;
+            }
+            function tmStart() {
+                if (tmRunning) return;
+                const total = tmGetInput();
+                if (total <= 0) { alert('установи время больше 0'); return; }
+                tmRunning = true;
+                tmRemaining = tmRemaining > 0 ? tmRemaining : total;
+                tmEndTime = Date.now() + tmRemaining;
+                tmInterval = setInterval(tmTick, 100);
+                tmDisplay.classList.remove('paused', 'stopped', 'timer-done');
+                tmStartBtn.disabled = true;
+                tmPauseBtn.disabled = false;
+                tmTick();
+            }
+            function tmPause() {
+                if (!tmRunning) return;
+                tmRunning = false;
+                if (tmInterval) { clearInterval(tmInterval); tmInterval = null; }
+                tmDisplay.classList.add('paused');
+                tmDisplay.classList.remove('stopped', 'timer-done');
+                tmStartBtn.disabled = false;
+                tmPauseBtn.disabled = true;
+            }
+            function tmReset() {
+                tmRunning = false;
+                if (tmInterval) { clearInterval(tmInterval); tmInterval = null; }
+                tmRemaining = 0;
+                tmRender();
+                tmDisplay.classList.remove('paused', 'timer-done');
+                tmDisplay.classList.add('stopped');
+                tmStartBtn.disabled = false;
+                tmPauseBtn.disabled = true;
+            }
+            function tmFinish() {
+                tmRunning = false;
+                if (tmInterval) { clearInterval(tmInterval); tmInterval = null; }
+                tmDisplay.classList.remove('paused', 'stopped');
+                tmDisplay.classList.add('timer-done');
+                tmStartBtn.disabled = false;
+                tmPauseBtn.disabled = true;
+                addLogEntry('⏳ таймер завершён', 'winner');
+                try {
+                    const ac = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = ac.createOscillator();
+                    const gain = ac.createGain();
+                    osc.connect(gain);
+                    gain.connect(ac.destination);
+                    osc.frequency.value = 880;
+                    gain.gain.setValueAtTime(0.3, ac.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 1.2);
+                    osc.start();
+                    osc.stop(ac.currentTime + 1.2);
+                } catch(e) {}
+            }
+
+            // ===== РУЛЕТКА =====
+            function openRoulette() {
+                closeModal();
+                rouletteOverlay.classList.add('active');
+                rouletteWinner.textContent = '';
+                rouletteParticipants.textContent = `участников: ${participants.length}`;
+                rouletteSpinning = false;
+                spinButton.disabled = false;
+                rouletteStrip.innerHTML = '';
+                for (let copy = 0; copy < 200; copy++) {
+                    participants.forEach(p => {
+                        const item = document.createElement('div');
+                        item.className = 'roulette-item';
+                        item.textContent = p.username;
+                        rouletteStrip.appendChild(item);
+                    });
+                }
+                rouletteStrip.style.transition = 'none';
+                rouletteStrip.style.transform = 'translateX(0px)';
+                rouletteStrip.offsetHeight;
+            }
+
+            function spinRoulette() {
+                if (rouletteSpinning) return;
+                rouletteSpinning = true;
+                spinButton.disabled = true;
+                rouletteWinner.textContent = '';
+                const duration = parseInt(rouletteDuration.value) || 15;
+                const itemWidth = 166;
+                const randomIndex = Math.floor(Math.random() * participants.length);
+                const winner = participants[randomIndex].username;
+                const fullLoops = Math.ceil(duration * 3);
+                const totalItems = participants.length;
+                const shift = (fullLoops * totalItems + randomIndex) * itemWidth;
+                const targetX = 275 - shift;
+                rouletteStrip.style.transition = `transform ${duration}s cubic-bezier(0.12, 0.8, 0.15, 1)`;
+                rouletteStrip.style.transform = `translateX(${targetX}px)`;
+                setTimeout(() => {
+                    rouletteWinner.textContent = `🏆 ${winner}`;
+                    setTimeout(() => {
+                        rouletteOverlay.classList.remove('active');
+                        setWinner(winner);
+                        rouletteSpinning = false;
+                    }, 2500);
+                }, duration * 1000);
+            }
+
+            // ===== ЗОНА =====
+            function resizeZoneCanvas() {
+                const rect = zoneCanvas.parentElement.getBoundingClientRect();
+                zoneCanvas.width = rect.width;
+                zoneCanvas.height = rect.height;
+            }
+            function getZoneRadius() { return zone.currentRadius; }
+            function isInZone(x, y) {
+                const r = getZoneRadius();
+                if (r >= 1) return true;
+                const dx = x - zone.currentX;
+                const dy = y - zone.currentY;
+                const maxR = r * ZONE_RADIUS;
+                return (dx * dx + dy * dy) <= (maxR * maxR);
+            }
+            function drawZoneMap() {
+                if (!zoneAnimationActive) return;
+                const w = zoneCanvas.width, h = zoneCanvas.height;
+                if (w === 0 || h === 0) { requestAnimationFrame(drawZoneMap); return; }
+                zoneCtx.clearRect(0, 0, w, h);
+                const grad = zoneCtx.createRadialGradient(w/2, h/2, 0, w/2, h/2, w*0.7);
+                grad.addColorStop(0, '#1a1f35');
+                grad.addColorStop(1, '#0a0d1a');
+                zoneCtx.fillStyle = grad;
+                zoneCtx.fillRect(0, 0, w, h);
+                zoneCtx.strokeStyle = 'rgba(255,255,255,0.03)';
+                zoneCtx.lineWidth = 1;
+                for (let i = 0; i < 20; i++) {
+                    const pos = (i / 20) * w;
+                    zoneCtx.beginPath(); zoneCtx.moveTo(pos, 0); zoneCtx.lineTo(pos, h); zoneCtx.stroke();
+                    zoneCtx.beginPath(); zoneCtx.moveTo(0, pos); zoneCtx.lineTo(w, pos); zoneCtx.stroke();
+                }
+                const r = getZoneRadius();
+                if (r < 1 || zone.animating) {
+                    const cx = zone.currentX * w, cy = zone.currentY * h;
+                    const radius = r * Math.min(w, h) * ZONE_RADIUS;
+                    zoneCtx.beginPath();
+                    zoneCtx.rect(0, 0, w, h);
+                    zoneCtx.moveTo(cx + radius, cy);
+                    zoneCtx.arc(cx, cy, radius, 0, Math.PI * 2, true);
+                    zoneCtx.fillStyle = 'rgba(0,0,0,0.45)';
+                    zoneCtx.fill();
+                    zoneCtx.beginPath();
+                    zoneCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+                    zoneCtx.strokeStyle = 'rgba(125,211,160,0.8)';
+                    zoneCtx.lineWidth = 2;
+                    zoneCtx.setLineDash([6, 6]);
+                    zoneCtx.stroke();
+                    zoneCtx.setLineDash([]);
+                }
+                for (const p of zonePlayers) {
+                    const x = p.x * w, y = p.y * h;
+                    const inZ = isInZone(p.x, p.y);
+                    zoneCtx.fillStyle = !p.alive ? 'rgba(224,122,122,0.2)' : (inZ ? 'rgba(229,181,103,0.9)' : 'rgba(125,211,160,0.85)');
+                    zoneCtx.beginPath();
+                    const size = (zoneWinner && p.id === zoneWinner.id) ? WINNER_DOT_SIZE : (p.alive ? PLAYER_DOT_SIZE : DEAD_DOT_SIZE);
+                    zoneCtx.arc(x, y, size, 0, Math.PI * 2);
+                    zoneCtx.fill();
+                    zoneCtx.fillStyle = p.alive ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.35)';
+                    zoneCtx.font = `${PLAYER_FONT_SIZE}px JetBrains Mono, monospace`;
+                    zoneCtx.textAlign = 'center';
+                    zoneCtx.fillText(p.name, x, y - size - 6);
+                }
+                requestAnimationFrame(drawZoneMap);
+            }
+            function openZoneMode() {
+                closeModal();
+                zoneOverlay.classList.add('active');
+                zoneWinnerName.textContent = '';
+                zoneStatusText.textContent = 'нажмите "запустить зону"';
+                zoneGameRunning = false;
+                zoneCurrentRound = 0;
+                zoneWinner = null;
+                zonePlayers = participants.map(p => ({
+                    id: p.username, name: p.username,
+                    x: 0.1 + Math.random() * 0.8,
+                    y: 0.1 + Math.random() * 0.8,
+                    alive: true
+                }));
+                zone.currentRadius = ZONE_RADIUS;
+                zone.targetRadius = ZONE_RADIUS;
+                zone.currentX = 0.5;
+                zone.currentY = 0.5;
+                zone.animating = false;
+                zoneStartBtn.disabled = false;
+                zoneAnimationActive = true;
+                setTimeout(() => { resizeZoneCanvas(); drawZoneMap(); }, 100);
+            }
+            function startZoneGame() {
+                if (zoneGameRunning) return;
+                if (zonePlayers.filter(p => p.alive).length < 2) { zoneStatusText.textContent = 'нужно минимум 2 живых'; return; }
+                zoneGameRunning = true;
+                zoneCurrentRound = 0;
+                zoneWinner = null;
+                for (const p of zonePlayers) p.alive = true;
+                zoneStartBtn.disabled = true;
+                zoneStatusText.textContent = 'зона надвигается...';
+                nextZoneRound();
+            }
+            function nextZoneRound() {
+                if (!zoneGameRunning) return;
+                const alive = zonePlayers.filter(p => p.alive);
+                if (alive.length <= 1) {
+                    if (alive.length === 1) {
+                        zoneWinner = alive[0];
+                        zoneWinnerName.textContent = `🏆 ${zoneWinner.name}`;
+                        zoneStatusText.textContent = `победитель: ${zoneWinner.name}`;
+                        setTimeout(() => { zoneOverlay.classList.remove('active'); zoneAnimationActive = false; setWinner(zoneWinner.name); }, 2500);
+                    }
+                    zoneGameRunning = false;
+                    zoneStartBtn.disabled = false;
+                    return;
+                }
+                zoneCurrentRound++;
+                const target = alive[Math.floor(Math.random() * alive.length)];
+                zone.startX = zone.currentX;
+                zone.startY = zone.currentY;
+                zone.startRadius = zone.currentRadius;
+                zone.targetX = Math.max(0.1, Math.min(0.9, target.x + (Math.random() - 0.5) * 0.1));
+                zone.targetY = Math.max(0.1, Math.min(0.9, target.y + (Math.random() - 0.5) * 0.1));
+                zone.targetRadius = ZONE_RADIUS;
+                zone.animating = true;
+                const startTime = Date.now();
+                const moveDuration = 1500 + Math.random() * 1000;
+                function animateMove() {
+                    if (!zone.animating || !zoneGameRunning) { zone.animating = false; return; }
+                    const elapsed = Date.now() - startTime;
+                    let t = Math.min(1, elapsed / moveDuration);
+                    const ease = 1 - Math.pow(1 - t, 3);
+                    zone.currentX = zone.startX + (zone.targetX - zone.startX) * ease;
+                    zone.currentY = zone.startY + (zone.targetY - zone.startY) * ease;
+                    zone.currentRadius = zone.startRadius + (zone.targetRadius - zone.startRadius) * ease;
+                    if (t < 1) requestAnimationFrame(animateMove);
+                    else { zone.currentX = zone.targetX; zone.currentY = zone.targetY; zone.currentRadius = zone.targetRadius; zone.animating = false; killInsideZone(); }
+                }
+                animateMove();
+                zoneStatusText.textContent = `раунд ${zoneCurrentRound} — зона надвигается`;
+            }
+            function killInsideZone() {
+                if (!zoneGameRunning) return;
+                const alive = zonePlayers.filter(p => p.alive);
+                let killed = [];
+                for (const p of alive) if (isInZone(p.x, p.y)) { p.alive = false; killed.push(p.name); }
+                if (killed.length > 0) zoneStatusText.textContent = `💀 выбыли: ${killed.join(', ')}`;
+                else {
+                    const aliveList = zonePlayers.filter(p => p.alive);
+                    if (aliveList.length > 1) {
+                        const nearest = aliveList.reduce((a, b) => {
+                            const da = (a.x - zone.currentX) ** 2 + (a.y - zone.currentY) ** 2;
+                            const db = (b.x - zone.currentX) ** 2 + (b.y - zone.currentY) ** 2;
+                            return da < db ? a : b;
+                        });
+                        nearest.alive = false;
+                        zoneStatusText.textContent = `💀 выбыл: ${nearest.name}`;
+                    }
+                }
+                const newAlive = zonePlayers.filter(p => p.alive);
+                if (newAlive.length <= 1) {
+                    if (newAlive.length === 1) {
+                        zoneWinner = newAlive[0];
+                        zoneWinnerName.textContent = `🏆 ${zoneWinner.name}`;
+                        zoneStatusText.textContent = `победитель: ${zoneWinner.name}`;
+                        setTimeout(() => { zoneOverlay.classList.remove('active'); zoneAnimationActive = false; setWinner(zoneWinner.name); }, 2500);
+                    }
+                    zoneGameRunning = false;
+                    zoneStartBtn.disabled = false;
+                    return;
+                }
+                setTimeout(nextZoneRound, Math.max(600, 1800 - zoneCurrentRound * 30));
+            }
+            function closeZoneMode() {
+                zoneGameRunning = false;
+                zone.animating = false;
+                zoneAnimationActive = false;
+                zoneOverlay.classList.remove('active');
+            }
+
+            // ===== БАТЛ РОЯЛЬ =====
+            function resizeBrCanvas() {
+                const rect = brCanvas.parentElement.getBoundingClientRect();
+                const dpr = window.devicePixelRatio || 1;
+                brCanvas.width = Math.max(1, Math.floor(rect.width * dpr));
+                brCanvas.height = Math.max(1, Math.floor(rect.height * dpr));
+                brCanvas.style.width = rect.width + 'px';
+                brCanvas.style.height = rect.height + 'px';
+                brCtx.setTransform(1, 0, 0, 1, 0, 0);
+                brCtx.scale(dpr, dpr);
+            }
+            function getBrSize() {
+                const rect = brCanvas.parentElement.getBoundingClientRect();
+                return { W: rect.width, H: rect.height };
+            }
+            function openBattleRoyal() {
+                closeModal();
+                if (participants.length < 2) { alert('нужно минимум 2 участника'); return; }
+                battleOverlay.classList.add('active');
+                brWinnerName.textContent = '';
+                brStatusText.textContent = 'нажмите "начать битву"';
+                brRunning = false;
+                brDone = false;
+                brWinner = null;
+                brFighters = []; brPickups = []; brObstacles = [];
+                brT = 0; brLast = 0;
+                brZone = { r: 2, targetR: 2, cx: 0.5, cy: 0.5, active: false, startDelay: 10 };
+                brStartBtn.disabled = false;
+                brAnimActive = true;
+                setTimeout(() => {
+                    resizeBrCanvas();
+                    brDraw();
+                    setTimeout(() => { resizeBrCanvas(); brDraw(); }, 150);
+                }, 60);
+            }
+            function startBattleRoyal() {
+                if (brRunning) return;
+                if (participants.length < 2) return;
+                const { W, H } = getBrSize();
+                const margin = 60;
+                brFighters = participants.map((p, i) => {
+                    const a = (i / participants.length) * Math.PI * 2;
+                    const x = Math.max(margin, Math.min(W - margin, W/2 + Math.cos(a) * W * 0.35));
+                    const y = Math.max(margin, Math.min(H - margin, H/2 + Math.sin(a) * H * 0.35));
+                    return {
+                        name: p.username, x, y, vx: 0, vy: 0,
+                        hp: BR_MAXHP, sh: 0, ar: 0, alive: true,
+                        color: ['#9146FF','#ff6b6b','#00f593','#ffb31a','#00d4ff','#ff9500','#ff00ff','#00ff88'][i % 8],
+                        cd: 0, tgt: null, pick: null, df: 0, hf: 0, isW: false, zoneTick: 0
+                    };
+                });
+                const treeCount = 10 + Math.floor(Math.random() * 6);
+                for (let i = 0; i < treeCount; i++) {
+                    let x, y, tries = 0;
+                    do {
+                        x = 40 + Math.random() * (W - 80);
+                        y = 40 + Math.random() * (H - 80);
+                        tries++;
+                    } while (tries < 20 && brFighters.some(f => Math.hypot(f.x - x, f.y - y) < 90));
+                    const isTree = Math.random() < 0.5;
+                    brObstacles.push({ x, y, r: isTree ? 22 : 16, type: isTree ? 'tree' : 'bush' });
+                }
+                const pCount = Math.max(6, Math.floor(brFighters.length * 1.5));
+                for (let i = 0; i < pCount; i++) {
+                    const r = Math.random();
+                    const type = r < 0.6 ? 'heal' : r < 0.85 ? 'shield' : 'armor';
+                    let x, y, tries = 0;
+                    do {
+                        x = 40 + Math.random() * (W - 80);
+                        y = 40 + Math.random() * (H - 80);
+                        tries++;
+                    } while (tries < 30 && (brFighters.some(f => Math.hypot(f.x - x, f.y - y) < 80) || brObstacles.some(o => Math.hypot(o.x - x, o.y - y) < o.r + 30)));
+                    brPickups.push({ x, y, type, pulse: Math.random() * Math.PI * 2 });
+                }
+                brRunning = true;
+                brDone = false;
+                brT = 0;
+                brLast = 0;
+                brZone = { r: 2, targetR: 2, cx: 0.5, cy: 0.5, active: false, startDelay: 10 };
+                brStartBtn.disabled = true;
+                brStatusText.textContent = 'битва идёт...';
+                addLogEntry(`⚔️ батл рояль: ${brFighters.length} бойцов`, 'winner');
+                requestAnimationFrame(brLoop);
+            }
+            function brLoop(now) {
+                if (!brRunning && !brAnimActive) return;
+                if (!brLast) brLast = now;
+                let dt = Math.min(0.05, (now - brLast) / 1000);
+                brLast = now;
+                if (brRunning) { dt *= brSpeed; brT += dt; brUpdateZone(dt); brUpdate(dt); }
+                brDraw();
+                if (brRunning) requestAnimationFrame(brLoop);
+                else brAnimActive = false;
+            }
+            function brUpdateZone(dt) {
+                if (brT < brZone.startDelay) { brZone.active = false; return; }
+                if (!brZone.active) { brZone.active = true; brZone.r = 2; brZone.targetR = 1; }
+                const phase = Math.floor((brT - brZone.startDelay) / 8);
+                brZone.targetR = Math.max(0.25, 1 - phase * 0.12);
+                brZone.r += (brZone.targetR - brZone.r) * Math.min(1, dt * 0.4);
+                brZone.cx = 0.5 + Math.sin(brT * 0.15) * 0.06;
+                brZone.cy = 0.5 + Math.cos(brT * 0.12) * 0.06;
+            }
+            function brGetZoneInfo() {
+                if (!brZone.active) return null;
+                const { W, H } = getBrSize();
+                return { cx: brZone.cx * W, cy: brZone.cy * H, r: brZone.r * Math.min(W, H) * 0.5 };
+            }
+            function brInZone(f) {
+                const z = brGetZoneInfo();
+                if (!z) return true;
+                return Math.hypot(f.x - z.cx, f.y - z.cy) <= z.r;
+            }
+            function brZoneDanger(f) {
+                const z = brGetZoneInfo();
+                if (!z) return 0;
+                const d = Math.hypot(f.x - z.cx, f.y - z.cy);
+                if (d <= z.r) return 0;
+                const { W, H } = getBrSize();
+                return Math.min(1, (d - z.r) / (Math.min(W, H) * 0.3));
+            }
+            function brEscapePoint(f) {
+                const z = brGetZoneInfo();
+                if (!z) return null;
+                const dx = f.x - z.cx, dy = f.y - z.cy;
+                const d = Math.hypot(dx, dy);
+                if (d <= z.r) return null;
+                const safeR = z.r * 0.85;
+                return { x: z.cx + (dx / d) * safeR, y: z.cy + (dy / d) * safeR };
+            }
+            function brUpdate(dt) {
+                const alive = brFighters.filter(f => f.alive);
+                if (alive.length <= 1 && !brDone) { brFinish(alive[0] || null); return; }
+                const { W, H } = getBrSize();
+                for (const f of brFighters) {
+                    if (!f.alive) continue;
+                    f.cd = Math.max(0, f.cd - dt);
+                    f.df = Math.max(0, f.df - dt * 3);
+                    f.hf = Math.max(0, f.hf - dt * 3);
+                    if (brZone.active && !brInZone(f)) {
+                        f.zoneTick += dt;
+                        if (f.zoneTick >= BR_ZONE_TICK) {
+                            f.zoneTick = 0;
+                            f.hp -= BR_ZONE_DMG;
+                            f.df = 1;
+                            if (f.hp <= 0) { f.hp = 0; f.alive = false; addLogEntry(`🔥 ${f.name} погиб в зоне`, 'error'); continue; }
+                        }
+                    } else f.zoneTick = 0;
+                    const danger = brZoneDanger(f);
+                    const escape = brEscapePoint(f);
+                    let enemy = null, eDist = Infinity;
+                    for (const o of alive) {
+                        if (o === f) continue;
+                        const d = Math.hypot(o.x - f.x, o.y - f.y);
+                        if (d < eDist) { eDist = d; enemy = o; }
+                    }
+                    f.tgt = enemy;
+                    let pick = null, pDist = Infinity;
+                    const hpR = f.hp / BR_MAXHP;
+                    const insideZone = danger === 0;
+                    const fighting = enemy && eDist < BR_RANGE * 2.5;
+                    if (hpR < BR_LOWHP && insideZone && !fighting) {
+                        for (const p of brPickups) {
+                            const d = Math.hypot(p.x - f.x, p.y - f.y);
+                            if (d < pDist) { pDist = d; pick = p; }
+                        }
+                    }
+                    f.pick = pick;
+                    let tx = null, ty = null, mode = 'idle';
+                    if (escape) { tx = escape.x; ty = escape.y; mode = 'escape'; }
+                    else if (pick) { tx = pick.x; ty = pick.y; mode = 'pickup'; }
+                    else if (enemy) { tx = enemy.x; ty = enemy.y; mode = 'combat'; }
+                    if (!escape && brZone.active && danger === 0) {
+                        const z = brGetZoneInfo();
+                        if (z) {
+                            const d = Math.hypot(f.x - z.cx, f.y - z.cy);
+                            if (d > z.r * 0.8 && !fighting) {
+                                const dx = z.cx - f.x, dy = z.cy - f.y;
+                                const dd = Math.hypot(dx, dy);
+                                if (dd > 1) { tx = f.x + (dx / dd) * 100; ty = f.y + (dy / dd) * 100; mode = 'escape'; }
+                            }
+                        }
+                    }
+                    const spdMult = mode === 'escape' ? 1.35 : 1;
+                    if (tx !== null) {
+                        let dx = tx - f.x, dy = ty - f.y;
+                        const d = Math.hypot(dx, dy);
+                        const stopDist = mode === 'combat' ? BR_RANGE * 0.9 : 1;
+                        if (d > stopDist) {
+                            dx /= d; dy /= d;
+                            f.vx = dx * BR_SPEED * spdMult;
+                            f.vy = dy * BR_SPEED * spdMult;
+                        } else { f.vx = 0; f.vy = 0; }
+                    } else { f.vx = 0; f.vy = 0; }
+                    const nx = f.x + f.vx * dt;
+                    const ny = f.y + f.vy * dt;
+                    let bx = nx, by = ny;
+                    for (const o of brObstacles) {
+                        const minD = o.r + BR_RAD;
+                        const d = Math.hypot(nx - o.x, ny - o.y);
+                        if (d < minD) {
+                            const a = Math.atan2(ny - o.y, nx - o.x);
+                            bx = o.x + Math.cos(a) * minD;
+                            by = o.y + Math.sin(a) * minD;
+                        }
+                    }
+                    f.x = bx; f.y = by;
+                    const m = BR_RAD + 4;
+                    if (f.x < m) f.x = m;
+                    if (f.x > W - m) f.x = W - m;
+                    if (f.y < m) f.y = m;
+                    if (f.y > H - m) f.y = H - m;
+                    for (let i = brPickups.length - 1; i >= 0; i--) {
+                        const p = brPickups[i];
+                        if (Math.hypot(p.x - f.x, p.y - f.y) < BR_RAD + 14) { brApplyPick(f, p); brPickups.splice(i, 1); }
+                    }
+                    if (mode !== 'escape' && enemy && eDist < BR_RANGE * 1.15 && f.cd <= 0) { brAttack(f, enemy); f.cd = BR_CD; }
+                }
+            }
+            function brAttack(a, d) {
+                if (!d.alive) return;
+                let dmg = BR_DMG + Math.floor(Math.random() * 6) - 3;
+                dmg = Math.max(1, Math.round(dmg * (1 - d.ar)));
+                if (d.sh > 0) { const ab = Math.min(d.sh, dmg); d.sh -= ab; dmg -= ab; }
+                if (dmg > 0) d.hp = Math.max(0, d.hp - dmg);
+                d.df = 1;
+                if (d.hp <= 0) { d.alive = false; addLogEntry(`💀 ${a.name} убил ${d.name}`, 'error'); }
+            }
+            function brApplyPick(f, p) {
+                if (p.type === 'heal') { const h = Math.min(BR_HEAL, BR_MAXHP - f.hp); f.hp += h; f.hf = 1; }
+                else if (p.type === 'shield') { f.sh = Math.min(BR_MAXSH, f.sh + BR_SH); f.hf = 1; }
+                else { f.ar = Math.min(BR_MAXAR, f.ar + 0.15); f.hf = 1; }
+            }
+            function brFinish(w) {
+                brRunning = false;
+                brDone = true;
+                brWinner = w;
+                if (w) {
+                    w.isW = true;
+                    brWinnerName.textContent = `🏆 ${w.name}`;
+                    brStatusText.textContent = `победитель: ${w.name}`;
+                    addLogEntry(`🏆 победитель БР: @${w.name}`, 'winner');
+                    setTimeout(() => { battleOverlay.classList.remove('active'); brAnimActive = false; setWinner(w.name); }, 2500);
+                } else {
+                    brStatusText.textContent = 'ничья';
+                    addLogEntry('🏆 ничья в БР', 'winner');
+                }
+                brDraw();
+            }
+            function brDraw() {
+                const { W, H } = getBrSize();
+                if (W === 0 || H === 0) return;
+                brCtx.clearRect(0, 0, W, H);
+                const g = brCtx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W, H) * 0.7);
+                g.addColorStop(0, '#1a2035');
+                g.addColorStop(1, '#0a0d1a');
+                brCtx.fillStyle = g;
+                brCtx.fillRect(0, 0, W, H);
+                brCtx.strokeStyle = 'rgba(255,255,255,0.04)';
+                brCtx.lineWidth = 1;
+                for (let x = 0; x < W; x += 50) { brCtx.beginPath(); brCtx.moveTo(x, 0); brCtx.lineTo(x, H); brCtx.stroke(); }
+                for (let y = 0; y < H; y += 50) { brCtx.beginPath(); brCtx.moveTo(0, y); brCtx.lineTo(W, y); brCtx.stroke(); }
+                if (brZone.active) {
+                    const cx = brZone.cx * W, cy = brZone.cy * H;
+                    const r = brZone.r * Math.min(W, H) * 0.5;
+                    brCtx.fillStyle = 'rgba(224,122,122,0.15)';
+                    brCtx.beginPath();
+                    brCtx.rect(0, 0, W, H);
+                    brCtx.arc(cx, cy, r, 0, Math.PI * 2, true);
+                    brCtx.fill();
+                    brCtx.strokeStyle = `rgba(224,122,122,${0.5 + 0.3 * Math.sin(brT * 3)})`;
+                    brCtx.lineWidth = 3;
+                    brCtx.setLineDash([10, 8]);
+                    brCtx.beginPath();
+                    brCtx.arc(cx, cy, r, 0, Math.PI * 2);
+                    brCtx.stroke();
+                    brCtx.setLineDash([]);
+                }
+                for (const p of brPickups) {
+                    const pulse = 0.6 + 0.4 * Math.sin(p.pulse);
+                    const colors = { heal: '#7dd3a0', shield: '#7aa7d8', armor: '#e5b567' };
+                    const icons = { heal: '💊', shield: '🛡️', armor: '🎽' };
+                    const c = colors[p.type];
+                    brCtx.fillStyle = c + '33';
+                    brCtx.beginPath();
+                    brCtx.arc(p.x, p.y, 14 * pulse, 0, Math.PI * 2);
+                    brCtx.fill();
+                    brCtx.font = '16px Inter';
+                    brCtx.textAlign = 'center';
+                    brCtx.textBaseline = 'middle';
+                    brCtx.fillText(icons[p.type], p.x, p.y + 1);
+                }
+                for (const o of brObstacles) {
+                    brCtx.fillStyle = 'rgba(0,0,0,0.4)';
+                    brCtx.beginPath();
+                    brCtx.ellipse(o.x, o.y + o.r * 0.4, o.r * 0.9, o.r * 0.35, 0, 0, Math.PI * 2);
+                    brCtx.fill();
+                    if (o.type === 'tree') {
+                        brCtx.fillStyle = '#1a4d2a';
+                        brCtx.beginPath(); brCtx.arc(o.x, o.y - o.r * 0.4, o.r, 0, Math.PI * 2); brCtx.fill();
+                        brCtx.fillStyle = '#2d6e3f';
+                        brCtx.beginPath(); brCtx.arc(o.x, o.y - o.r * 0.7, o.r * 0.65, 0, Math.PI * 2); brCtx.fill();
+                    } else {
+                        brCtx.fillStyle = '#1e4a2a';
+                        brCtx.beginPath();
+                        brCtx.arc(o.x - o.r * 0.4, o.y, o.r * 0.7, 0, Math.PI * 2);
+                        brCtx.arc(o.x + o.r * 0.4, o.y, o.r * 0.7, 0, Math.PI * 2);
+                        brCtx.fill();
+                    }
+                }
+                for (const f of brFighters) {
+                    if (!f.alive && !f.isW) {
+                        brCtx.strokeStyle = 'rgba(224,122,122,0.5)';
+                        brCtx.lineWidth = 2;
+                        brCtx.beginPath();
+                        brCtx.moveTo(f.x - 7, f.y - 7); brCtx.lineTo(f.x + 7, f.y + 7);
+                        brCtx.moveTo(f.x + 7, f.y - 7); brCtx.lineTo(f.x - 7, f.y + 7);
+                        brCtx.stroke();
+                        continue;
+                    }
+                    brCtx.fillStyle = 'rgba(0,0,0,0.4)';
+                    brCtx.beginPath();
+                    brCtx.ellipse(f.x, f.y + BR_RAD * 0.85, BR_RAD * 0.85, BR_RAD * 0.25, 0, 0, Math.PI * 2);
+                    brCtx.fill();
+                    brCtx.fillStyle = f.color;
+                    brCtx.strokeStyle = f.isW ? '#7dd3a0' : '#fff';
+                    brCtx.lineWidth = f.isW ? 3 : 2;
+                    brCtx.beginPath();
+                    brCtx.arc(f.x, f.y, BR_RAD, 0, Math.PI * 2);
+                    brCtx.fill();
+                    brCtx.stroke();
+                    if (f.sh > 0) {
+                        brCtx.strokeStyle = `rgba(122,167,216,${0.4 + 0.4 * (f.sh / BR_MAXSH)})`;
+                        brCtx.lineWidth = 2;
+                        brCtx.beginPath(); brCtx.arc(f.x, f.y, BR_RAD + 3, 0, Math.PI * 2); brCtx.stroke();
+                    }
+                    const bw = BR_RAD * 2.4, bh = 4;
+                    const bx = f.x - bw / 2, by = f.y - BR_RAD - 14;
+                    brCtx.fillStyle = 'rgba(0,0,0,0.7)';
+                    brCtx.fillRect(bx, by, bw, bh);
+                    const hpR = f.hp / BR_MAXHP;
+                    brCtx.fillStyle = hpR > 0.6 ? '#7dd3a0' : hpR > 0.3 ? '#e5b567' : '#e07a7a';
+                    brCtx.fillRect(bx + 1, by + 1, (bw - 2) * hpR, bh - 2);
+                    brCtx.fillStyle = '#fff';
+                    brCtx.font = 'bold 10px Inter';
+                    brCtx.textAlign = 'center';
+                    brCtx.textBaseline = 'bottom';
+                    brCtx.fillText(f.name, f.x, by - 3);
+                }
+                brCtx.textBaseline = 'alphabetic';
+            }
+            function closeBattleRoyal() {
+                brRunning = false;
+                brAnimActive = false;
+                battleOverlay.classList.remove('active');
+            }
+
+            // ===== ЛАБИРИНТ =====
+            function resizeMazeCanvas() {
+                const rect = mazeCanvas.parentElement.getBoundingClientRect();
+                mazeCanvas.width = rect.width;
+                mazeCanvas.height = rect.height;
+            }
+            function generateMaze() {
+                mazeGrid = [];
+                for (let y = 0; y < mazeRows; y++) {
+                    const row = [];
+                    for (let x = 0; x < mazeCols; x++) row.push({ walls: { top: true, right: true, bottom: true, left: true }, visited: false });
+                    mazeGrid.push(row);
+                }
+                const stack = [{ x: 0, y: 0 }];
+                mazeGrid[0][0].visited = true;
+                while (stack.length > 0) {
+                    const cur = stack[stack.length - 1];
+                    const nb = [];
+                    if (cur.y > 0 && !mazeGrid[cur.y - 1][cur.x].visited) nb.push({ x: cur.x, y: cur.y - 1, dir: 'top', opp: 'bottom' });
+                    if (cur.x < mazeCols - 1 && !mazeGrid[cur.y][cur.x + 1].visited) nb.push({ x: cur.x + 1, y: cur.y, dir: 'right', opp: 'left' });
+                    if (cur.y < mazeRows - 1 && !mazeGrid[cur.y + 1][cur.x].visited) nb.push({ x: cur.x, y: cur.y + 1, dir: 'bottom', opp: 'top' });
+                    if (cur.x > 0 && !mazeGrid[cur.y][cur.x - 1].visited) nb.push({ x: cur.x - 1, y: cur.y, dir: 'left', opp: 'right' });
+                    if (nb.length > 0) {
+                        const n = nb[Math.floor(Math.random() * nb.length)];
+                        mazeGrid[cur.y][cur.x].walls[n.dir] = false;
+                        mazeGrid[n.y][n.x].walls[n.opp] = false;
+                        mazeGrid[n.y][n.x].visited = true;
+                        stack.push({ x: n.x, y: n.y });
+                    } else stack.pop();
+                }
+                const breaks = Math.floor(mazeCols * mazeRows * 0.35);
+                for (let k = 0; k < breaks; k++) {
+                    const x = Math.floor(Math.random() * mazeCols);
+                    const y = Math.floor(Math.random() * mazeRows);
+                    const dirs = [];
+                    if (x < mazeCols - 1 && mazeGrid[y][x].walls.right) dirs.push({ dir: 'right', opp: 'left', nx: x + 1, ny: y });
+                    if (x > 0 && mazeGrid[y][x].walls.left) dirs.push({ dir: 'left', opp: 'right', nx: x - 1, ny: y });
+                    if (y < mazeRows - 1 && mazeGrid[y][x].walls.bottom) dirs.push({ dir: 'bottom', opp: 'top', nx: x, ny: y + 1 });
+                    if (y > 0 && mazeGrid[y][x].walls.top) dirs.push({ dir: 'top', opp: 'bottom', nx: x, ny: y - 1 });
+                    if (dirs.length > 0) {
+                        const d = dirs[Math.floor(Math.random() * dirs.length)];
+                        mazeGrid[y][x].walls[d.dir] = false;
+                        mazeGrid[d.ny][d.nx].walls[d.opp] = false;
+                    }
+                }
+                const fx = mazeCols - 1, fy = mazeRows - 1;
+                const fc = mazeGrid[fy][fx];
+                if (fc.walls.left) { fc.walls.left = false; mazeGrid[fy][fx - 1].walls.right = false; }
+                if (fc.walls.top) { fc.walls.top = false; mazeGrid[fy - 1][fx].walls.bottom = false; }
+                mazeTraps = [];
+                const numTraps = Math.max(3, Math.floor(mazeCols * mazeRows * 0.05));
+                const types = ['slow', 'stun', 'teleport', 'reverse'];
+                for (let t = 0; t < numTraps; t++) {
+                    let attempts = 0;
+                    while (attempts < 50) {
+                        attempts++;
+                        const tx = Math.floor(Math.random() * mazeCols);
+                        const ty = Math.floor(Math.random() * mazeRows);
+                        if ((tx === 0 && ty === 0) || (tx === mazeCols - 1 && ty === mazeRows - 1)) continue;
+                        if (mazeTraps.some(tr => tr.x === tx && tr.y === ty)) continue;
+                        mazeTraps.push({ x: tx, y: ty, type: types[Math.floor(Math.random() * types.length)], triggeredBy: new Set() });
+                        break;
+                    }
+                }
+            }
+            function findPathWithVariation(sx, sy, fx, fy, seed) {
+                const rng = (() => { let s = Math.floor(seed * 100000) + 1; return () => { s = (s * 9301 + 49297) % 233280; return s / 233280; }; })();
+                const visited = new Set();
+                const queue = [{ x: sx, y: sy, path: [{ x: sx, y: sy }] }];
+                visited.add(sy * mazeCols + sx);
+                while (queue.length > 0) {
+                    const cur = queue.shift();
+                    if (cur.x === fx && cur.y === fy) return cur.path;
+                    const cell = mazeGrid[cur.y][cur.x];
+                    const moves = [];
+                    if (!cell.walls.top && cur.y > 0) moves.push({ x: cur.x, y: cur.y - 1 });
+                    if (!cell.walls.right && cur.x < mazeCols - 1) moves.push({ x: cur.x + 1, y: cur.y });
+                    if (!cell.walls.bottom && cur.y < mazeRows - 1) moves.push({ x: cur.x, y: cur.y + 1 });
+                    if (!cell.walls.left && cur.x > 0) moves.push({ x: cur.x - 1, y: cur.y });
+                    moves.sort((a, b) => {
+                        const da = Math.abs(a.x - fx) + Math.abs(a.y - fy) + (rng() - 0.5) * 4;
+                        const db = Math.abs(b.x - fx) + Math.abs(b.y - fy) + (rng() - 0.5) * 4;
+                        return da - db;
+                    });
+                    for (const m of moves) {
+                        const key = m.y * mazeCols + m.x;
+                        if (!visited.has(key)) { visited.add(key); queue.push({ x: m.x, y: m.y, path: [...cur.path, m] }); }
+                    }
+                }
+                return null;
+            }
+            function drawMaze(timestamp) {
+                if (!mazeAnimationActive) return;
+                const w = mazeCanvas.width, h = mazeCanvas.height;
+                if (w === 0 || h === 0) { requestAnimationFrame(drawMaze); return; }
+                const dt = Math.min(50, timestamp - (drawMaze._last || timestamp));
+                drawMaze._last = timestamp;
+                mazeCtx.clearRect(0, 0, w, h);
+                mazeCtx.fillStyle = '#050a10';
+                mazeCtx.fillRect(0, 0, w, h);
+                const cellW = w / mazeCols, cellH = h / mazeRows;
+                mazeCellSize = Math.min(cellW, cellH);
+                const offsetX = (w - cellW * mazeCols) / 2;
+                const offsetY = (h - cellH * mazeRows) / 2;
+                const wallT = Math.max(3, Math.min(cellW, cellH) * 0.14);
+                for (let y = 0; y < mazeRows; y++)
+                    for (let x = 0; x < mazeCols; x++) {
+                        const px = offsetX + x * cellW, py = offsetY + y * cellH;
+                        mazeCtx.fillStyle = 'rgba(0, 30, 50, 0.4)';
+                        mazeCtx.fillRect(px, py, cellW, cellH);
+                    }
+                for (const trap of mazeTraps) {
+                    const px = offsetX + trap.x * cellW + cellW / 2;
+                    const py = offsetY + trap.y * cellH + cellH / 2;
+                    const pulse = 0.5 + 0.5 * Math.sin(Date.now() / 300);
+                    const colors = { slow: '229,181,103', stun: '224,122,122', teleport: '177,76,255', reverse: '122,167,216' };
+                    const icons = { slow: '🐌', stun: '⚡', teleport: '🌀', reverse: '↩' };
+                    mazeCtx.fillStyle = `rgba(${colors[trap.type]}, ${0.2 + 0.3 * pulse})`;
+                    mazeCtx.beginPath();
+                    mazeCtx.arc(px, py, mazeCellSize * 0.22, 0, Math.PI * 2);
+                    mazeCtx.fill();
+                    mazeCtx.font = `${Math.floor(cellH * 0.4)}px Inter`;
+                    mazeCtx.textAlign = 'center';
+                    mazeCtx.textBaseline = 'middle';
+                    mazeCtx.fillText(icons[trap.type], px, py);
+                }
+                for (let y = 0; y < mazeRows; y++)
+                    for (let x = 0; x < mazeCols; x++) {
+                        const cell = mazeGrid[y][x];
+                        const px = offsetX + x * cellW, py = offsetY + y * cellH;
+                        const drawWall = (x1, y1, x2, y2) => {
+                            const g = mazeCtx.createLinearGradient(x1, y1, x2, y2);
+                            g.addColorStop(0, '#1a5c7a');
+                            g.addColorStop(1, '#082a3a');
+                            mazeCtx.fillStyle = g;
+                            mazeCtx.fillRect(x1, y1, x2 - x1, y2 - y1);
+                            mazeCtx.strokeStyle = 'rgba(120, 220, 255, 0.4)';
+                            mazeCtx.lineWidth = 1;
+                            mazeCtx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+                        };
+                        if (cell.walls.top) drawWall(px, py, px + cellW, py + wallT);
+                        if (cell.walls.left) drawWall(px, py, px + wallT, py + cellH);
+                        if (x === mazeCols - 1 && cell.walls.right) drawWall(px + cellW - wallT, py, px + cellW, py + cellH);
+                        if (y === mazeRows - 1 && cell.walls.bottom) drawWall(px, py + cellH - wallT, px + cellW, py + cellH);
+                    }
+                const fpx = offsetX + (mazeCols - 1) * cellW;
+                const fpy = offsetY + (mazeRows - 1) * cellH;
+                mazeCtx.fillStyle = 'rgba(125, 211, 160, 0.25)';
+                mazeCtx.fillRect(fpx, fpy, cellW, cellH);
+                mazeCtx.font = `${Math.floor(cellH * 0.55)}px Inter`;
+                mazeCtx.textAlign = 'center';
+                mazeCtx.textBaseline = 'middle';
+                mazeCtx.fillText('🏁', fpx + cellW / 2, fpy + cellH / 2);
+                for (const p of mazePlayers) {
+                    const targetPx = offsetX + (p.x + 0.5) * cellW;
+                    const targetPy = offsetY + (p.y + 0.5) * cellH;
+                    const sf = 1 - Math.pow(0.001, dt / 1000);
+                    p.px += (targetPx - p.px) * sf;
+                    p.py += (targetPy - p.py) * sf;
+                    mazeCtx.fillStyle = p.isWinner ? '#ffd700' : p.color;
+                    mazeCtx.beginPath();
+                    mazeCtx.arc(p.px, p.py, mazeCellSize * 0.28, 0, Math.PI * 2);
+                    mazeCtx.fill();
+                    mazeCtx.fillStyle = '#fff';
+                    mazeCtx.font = 'bold 10px Inter';
+                    mazeCtx.textAlign = 'center';
+                    mazeCtx.fillText(p.name, p.px, p.py - mazeCellSize * 0.4);
+                }
+                requestAnimationFrame(drawMaze);
+            }
+            function openMazeMode() {
+                closeModal();
+                if (participants.length < 2) { alert('нужно минимум 2 участника'); return; }
+                mazeOverlay.classList.add('active');
+                mazeWinnerName.textContent = '';
+                mazeStatusText.textContent = 'нажмите "запустить лабиринт"';
+                mazeRunning = false;
+                mazeWinner = null;
+                mazeStartBtn.disabled = false;
+                mazeAnimationActive = true;
+                generateMaze();
+                const colors = ['#9146FF', '#ff6b6b', '#7dd3a0', '#e5b567', '#7aa7d8', '#ff9500', '#ff00ff', '#00ff88'];
+                mazePlayers = participants.map((p, i) => ({
+                    name: p.username,
+                    x: 0, y: 0, px: 0, py: 0,
+                    color: colors[i % colors.length],
+                    alive: true, isWinner: false,
+                    slowed: false, slowedUntil: 0,
+                    stunned: false, stunnedUntil: 0,
+                    reversed: false, reversedUntil: 0
+                }));
+                setTimeout(() => {
+                    resizeMazeCanvas();
+                    const cellW = mazeCanvas.width / mazeCols;
+                    const cellH = mazeCanvas.height / mazeRows;
+                    const oX = (mazeCanvas.width - cellW * mazeCols) / 2;
+                    const oY = (mazeCanvas.height - cellH * mazeRows) / 2;
+                    for (const p of mazePlayers) { p.px = oX + (p.x + 0.5) * cellW; p.py = oY + (p.y + 0.5) * cellH; }
+                    requestAnimationFrame(drawMaze);
+                }, 100);
+            }
+            function startMaze() {
+                if (mazeRunning) return;
+                mazeRunning = true;
+                mazeStartBtn.disabled = true;
+                mazeWinner = null;
+                mazeStatusText.textContent = 'все бегут к финишу...';
+                const fx = mazeCols - 1, fy = mazeRows - 1;
+                for (const p of mazePlayers) {
+                    p.path = findPathWithVariation(p.x, p.y, fx, fy, Math.random());
+                    p.pathIndex = 0;
+                    p.finished = false;
+                    p.baseSpeed = 450 + Math.random() * 400;
+                    p.nextMoveAt = performance.now() + Math.random() * 500;
+                    p.stupidChance = 0.03 + Math.random() * 0.03;
+                    p.baseStopChance = 0.02 + Math.random() * 0.03;
+                }
+                function movePlayers(now) {
+                    if (!mazeRunning) return;
+                    let finished = false, winner = null;
+                    for (const p of mazePlayers) {
+                        if (!p.alive || p.finished) continue;
+                        if (p.x === fx && p.y === fy) { p.finished = true; p.isWinner = true; finished = true; winner = p; continue; }
+                        if (p.slowed && now > p.slowedUntil) p.slowed = false;
+                        if (p.stunned && now > p.stunnedUntil) p.stunned = false;
+                        if (p.reversed && now > p.reversedUntil) p.reversed = false;
+                        if (p.stunned) { if (now >= p.nextMoveAt) p.nextMoveAt = now + 400; continue; }
+                        if (now < p.nextMoveAt) continue;
+                        if (Math.random() < p.baseStopChance) { p.nextMoveAt = now + p.baseSpeed + 400 + Math.random() * 800; continue; }
+                        if (p.path && p.pathIndex < p.path.length - 1) {
+                            p.pathIndex++;
+                            if (Math.random() < p.stupidChance) { p.pathIndex--; p.nextMoveAt = now + p.baseSpeed + 300 + Math.random() * 600; continue; }
+                            let idx = p.pathIndex;
+                            if (p.reversed) { p.pathIndex -= 2; if (p.pathIndex < 0) p.pathIndex = 0; idx = p.pathIndex; }
+                            p.x = p.path[idx].x; p.y = p.path[idx].y;
+                            const trap = mazeTraps.find(tr => tr.x === p.x && tr.y === p.y && !tr.triggeredBy.has(p.name));
+                            if (trap) {
+                                trap.triggeredBy.add(p.name);
+                                if (trap.type === 'slow') { p.slowed = true; p.slowedUntil = now + 4000; }
+                                else if (trap.type === 'stun') { p.stunned = true; p.stunnedUntil = now + 2500; }
+                                else if (trap.type === 'teleport') {
+                                    let a = 0;
+                                    while (a < 30) {
+                                        a++;
+                                        const tx = Math.floor(Math.random() * mazeCols);
+                                        const ty = Math.floor(Math.random() * mazeRows);
+                                        if (mazeGrid[ty][tx]) { p.x = tx; p.y = ty; p.path = findPathWithVariation(p.x, p.y, fx, fy, Math.random()); p.pathIndex = 0; break; }
+                                    }
+                                } else if (trap.type === 'reverse') { p.reversed = true; p.reversedUntil = now + 2000; }
+                            }
+                            if (p.x === fx && p.y === fy) { p.finished = true; p.isWinner = true; finished = true; winner = p; }
+                        } else {
+                            p.path = findPathWithVariation(p.x, p.y, fx, fy, Math.random());
+                            p.pathIndex = 0;
+                        }
+                        let sm = 1;
+                        if (p.slowed) sm = 2.5;
+                        p.nextMoveAt = now + p.baseSpeed * sm + Math.random() * 250;
+                    }
+                    if (finished && winner) {
+                        mazeWinner = winner;
+                        mazeWinnerName.textContent = `🏆 ${winner.name}`;
+                        mazeStatusText.textContent = `победитель: ${winner.name}`;
+                        addLogEntry(`🌀 победитель лабиринта: @${winner.name}`, 'winner');
+                        setTimeout(() => { mazeOverlay.classList.remove('active'); mazeAnimationActive = false; setWinner(winner.name); }, 2500);
+                        mazeRunning = false;
+                        return;
+                    }
+                    requestAnimationFrame(movePlayers);
+                }
+                requestAnimationFrame(movePlayers);
+            }
+            function closeMazeMode() {
+                mazeRunning = false;
+                mazeAnimationActive = false;
+                mazeOverlay.classList.remove('active');
+            }
+
+            // ===== ГОНКА =====
+            function resizeRaceCanvas() {
+                const rect = raceCanvas.parentElement.getBoundingClientRect();
+                raceCanvas.width = rect.width;
+                raceCanvas.height = rect.height;
+            }
+            function generateRaceTrack(w, h) {
+                const cps = [];
+                const mX = 90, mY = 60;
+                const uW = w - mX * 2, uH = h - mY * 2;
+                const style = Math.floor(Math.random() * 7);
+                if (style === 0) {
+                    const rows = 4 + Math.floor(Math.random() * 3);
+                    const pp = 4 + Math.floor(Math.random() * 4);
+                    for (let r = 0; r < rows; r++) {
+                        const right = r % 2 === 0;
+                        const rowY = mY + (uH / (rows - 1)) * r + (Math.random() - 0.5) * 40;
+                        for (let i = 0; i < pp; i++) {
+                            const idx = right ? i : pp - 1 - i;
+                            const t = idx / (pp - 1);
+                            cps.push({ x: mX + t * uW, y: rowY + Math.sin(t * Math.PI * (1 + Math.random() * 2)) * (20 + Math.random() * 30) });
+                        }
+                    }
+                } else if (style === 1) {
+                    const cols = 3 + Math.floor(Math.random() * 3);
+                    const pp = 5 + Math.floor(Math.random() * 3);
+                    for (let c = 0; c < cols; c++) {
+                        const down = c % 2 === 0;
+                        const colX = mX + (uW / (cols - 1)) * c + (Math.random() - 0.5) * 50;
+                        for (let i = 0; i < pp; i++) {
+                            const idx = down ? i : pp - 1 - i;
+                            const t = idx / (pp - 1);
+                            cps.push({ x: colX + Math.sin(t * Math.PI * (1 + Math.random() * 2)) * (20 + Math.random() * 40), y: mY + t * uH });
+                        }
+                    }
+                } else if (style === 2) {
+                    const turns = 2 + Math.floor(Math.random() * 2);
+                    const ppt = 10;
+                    for (let t = 0; t <= turns * ppt; t++) {
+                        const a = (t / ppt) * Math.PI * 2;
+                        const rf = 1 - t / (turns * ppt + 5);
+                        cps.push({ x: w / 2 + Math.cos(a) * uW * 0.5 * rf, y: h / 2 + Math.sin(a) * uH * 0.5 * rf });
+                    }
+                } else if (style === 3) {
+                    const pts = 16 + Math.floor(Math.random() * 10);
+                    let cx = mX, cy = mY + uH / 2, ang = 0;
+                    for (let i = 0; i < pts; i++) {
+                        cps.push({ x: cx, y: cy });
+                        ang += (Math.random() - 0.5) * Math.PI * 0.9;
+                        cx += Math.cos(ang) * uW * 0.15;
+                        cy += Math.sin(ang) * uH * 0.15;
+                        cx = Math.max(mX, Math.min(w - mX, cx));
+                        cy = Math.max(mY, Math.min(h - mY, cy));
+                    }
+                    cps.push({ x: w - mX, y: h - mY });
+                } else if (style === 4) {
+                    const segs = 6 + Math.floor(Math.random() * 4);
+                    const diag = Math.random() < 0.5;
+                    for (let s = 0; s <= segs; s++) {
+                        const t = s / segs;
+                        const x = mX + t * uW;
+                        const y = diag ? mY + t * uH + Math.sin(t * Math.PI * 3) * uH * 0.3 : mY + uH - t * uH + Math.sin(t * Math.PI * 3) * uH * 0.3;
+                        cps.push({ x, y });
+                    }
+                } else if (style === 5) {
+                    const pts = 20 + Math.floor(Math.random() * 10);
+                    for (let i = 0; i < pts; i++) {
+                        const t = i / (pts - 1);
+                        cps.push({ x: mX + t * uW + (Math.random() - 0.5) * 40, y: mY + uH * (0.3 + 0.4 * Math.sin(t * Math.PI * (2 + Math.random() * 2)) + (Math.random() - 0.5) * 0.3) });
+                    }
+                } else {
+                    const loops = 3 + Math.floor(Math.random() * 3);
+                    const pts = loops * 8 + 2;
+                    for (let i = 0; i < pts; i++) {
+                        const t = i / (pts - 1);
+                        cps.push({ x: mX + t * uW, y: mY + uH * 0.5 + Math.sin(t * Math.PI * loops * 2) * uH * 0.4 });
+                    }
+                }
+                const track = [];
+                const samples = 12;
+                for (let i = 0; i < cps.length - 1; i++) {
+                    const p0 = cps[Math.max(0, i - 1)], p1 = cps[i], p2 = cps[i + 1], p3 = cps[Math.min(cps.length - 1, i + 2)];
+                    for (let s = 0; s < samples; s++) {
+                        const t = s / samples, t2 = t * t, t3 = t2 * t;
+                        track.push({
+                            x: 0.5 * ((2 * p1.x) + (-p0.x + p2.x) * t + (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 + (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3),
+                            y: 0.5 * ((2 * p1.y) + (-p0.y + p2.y) * t + (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 + (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3)
+                        });
+                    }
+                }
+                track.push(cps[cps.length - 1]);
+                let total = 0;
+                for (let i = 0; i < track.length - 1; i++) {
+                    const dx = track[i + 1].x - track[i].x;
+                    const dy = track[i + 1].y - track[i].y;
+                    const l = Math.sqrt(dx * dx + dy * dy);
+                    track[i].length = l;
+                    track[i].totalBefore = total;
+                    total += l;
+                }
+                track[track.length - 1].totalBefore = total;
+                track[track.length - 1].length = 0;
+                return { track, total };
+            }
+            function getTrackPosition(track, distance) {
+                for (let i = 0; i < track.length - 1; i++) {
+                    const seg = track[i];
+                    if (distance <= seg.totalBefore + seg.length || i === track.length - 2) {
+                        const t = Math.max(0, Math.min(1, (distance - seg.totalBefore) / (seg.length || 1)));
+                        const a = track[i], b = track[i + 1];
+                        return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t, angle: Math.atan2(b.y - a.y, b.x - a.x) };
+                    }
+                }
+                const last = track[track.length - 1];
+                return { x: last.x, y: last.y, angle: 0 };
+            }
+            function drawSmoothPath(ctx2, pts, color, width, dash) {
+                if (pts.length < 2) return;
+                ctx2.strokeStyle = color;
+                ctx2.lineWidth = width;
+                ctx2.lineCap = 'round';
+                ctx2.lineJoin = 'round';
+                if (dash) ctx2.setLineDash(dash);
+                ctx2.beginPath();
+                ctx2.moveTo(pts[0].x, pts[0].y);
+                for (let i = 1; i < pts.length - 1; i++) {
+                    const mx = (pts[i].x + pts[i + 1].x) / 2;
+                    const my = (pts[i].y + pts[i + 1].y) / 2;
+                    ctx2.quadraticCurveTo(pts[i].x, pts[i].y, mx, my);
+                }
+                ctx2.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+                ctx2.stroke();
+                if (dash) ctx2.setLineDash([]);
+            }
+            function drawRace(timestamp) {
+                if (!raceAnimationActive) return;
+                const w = raceCanvas.width, h = raceCanvas.height;
+                if (w === 0 || h === 0) { requestAnimationFrame(drawRace); return; }
+                const dt = raceAnimLastTime ? Math.min(50, timestamp - raceAnimLastTime) : 16;
+                raceAnimLastTime = timestamp;
+                raceCtx.clearRect(0, 0, w, h);
+                const g = raceCtx.createLinearGradient(0, 0, 0, h);
+                g.addColorStop(0, '#0a1a10');
+                g.addColorStop(1, '#05100a');
+                raceCtx.fillStyle = g;
+                raceCtx.fillRect(0, 0, w, h);
+                if (raceTrack.length < 2) { requestAnimationFrame(drawRace); return; }
+                drawSmoothPath(raceCtx, raceTrack, 'rgba(0,0,0,0.5)', 76);
+                drawSmoothPath(raceCtx, raceTrack, 'rgba(125,211,160,0.15)', 60);
+                drawSmoothPath(raceCtx, raceTrack, 'rgba(20,60,40,0.9)', 52);
+                drawSmoothPath(raceCtx, raceTrack, 'rgba(255,255,255,0.35)', 2, [15, 15]);
+                for (const r of raceRunners) {
+                    const target = getTrackPosition(raceTrack, r.distance);
+                    const sf = 1 - Math.pow(0.001, dt / 1000);
+                    r.px += (target.x - r.px) * sf;
+                    r.py += (target.y - r.py) * sf;
+                    let diff = target.angle - r.angle;
+                    while (diff > Math.PI) diff -= Math.PI * 2;
+                    while (diff < -Math.PI) diff += Math.PI * 2;
+                    r.angle += diff * sf;
+                    raceCtx.fillStyle = r.color;
+                    raceCtx.beginPath();
+                    raceCtx.arc(r.px, r.py, 10, 0, Math.PI * 2);
+                    raceCtx.fill();
+                    raceCtx.fillStyle = '#fff';
+                    raceCtx.font = 'bold 11px Inter';
+                    raceCtx.textAlign = 'center';
+                    raceCtx.fillText(r.name, r.px, r.py - 16);
+                }
+                requestAnimationFrame(drawRace);
+            }
+            function openRaceMode() {
+                closeModal();
+                if (participants.length < 2) { alert('нужно минимум 2 участника'); return; }
+                raceOverlay.classList.add('active');
+                raceWinnerName.textContent = '';
+                raceStatusText.textContent = 'нажмите "начать гонку"';
+                raceRunning = false;
+                raceWinner = null;
+                raceStartBtn.disabled = false;
+                raceAnimationActive = true;
+                raceAnimLastTime = 0;
+                setTimeout(() => {
+                    resizeRaceCanvas();
+                    const result = generateRaceTrack(raceCanvas.width, raceCanvas.height);
+                    raceTrack = result.track;
+                    raceTotalLength = result.total;
+                    const colors = ['#9146FF', '#ff6b6b', '#7dd3a0', '#e5b567', '#7aa7d8', '#ff9500', '#ff00ff', '#00ff88'];
+                    raceRunners = participants.map((p, i) => {
+                        const sp = getTrackPosition(raceTrack, 0);
+                        return {
+                            name: p.username, distance: 0,
+                            speed: 80 + Math.random() * 50,
+                            color: colors[i % colors.length],
+                            isWinner: false,
+                            px: sp.x + (Math.random() - 0.5) * 15,
+                            py: sp.y + (Math.random() - 0.5) * 15,
+                            angle: 0
+                        };
+                    });
+                    requestAnimationFrame(drawRace);
+                }, 100);
+            }
+            function startRace() {
+                if (raceRunning) return;
+                raceRunning = true;
+                raceStartBtn.disabled = true;
+                raceStatusText.textContent = 'гонка началась!';
+                let last = performance.now();
+                function tick(now) {
+                    if (!raceRunning) return;
+                    const dt = Math.min(50, now - last) / 1000;
+                    last = now;
+                    let finished = null;
+                    for (const r of raceRunners) {
+                        const boost = Math.random() < 0.08 ? 2 : 0;
+                        const slow = Math.random() < 0.05 ? -0.6 : 0;
+                        r.speed += (Math.random() - 0.5) * 20;
+                        if (r.speed < 50) r.speed = 50;
+                        if (r.speed > 180) r.speed = 180;
+                        r.distance += (r.speed + boost * 40 + slow * 40) * dt;
+                        if (r.distance >= raceTotalLength && !finished) { r.distance = raceTotalLength; finished = r; }
+                    }
+                    if (finished) {
+                        finished.isWinner = true;
+                        raceWinner = finished;
+                        raceWinnerName.textContent = `🏆 ${finished.name}`;
+                        raceStatusText.textContent = `победитель: ${finished.name}`;
+                        addLogEntry(`🏁 победитель гонки: @${finished.name}`, 'winner');
+                        setTimeout(() => { raceOverlay.classList.remove('active'); raceAnimationActive = false; setWinner(finished.name); }, 2500);
+                        raceRunning = false;
+                        return;
+                    }
+                    requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
+            }
+            function closeRaceMode() {
+                raceRunning = false;
+                raceAnimationActive = false;
+                raceOverlay.classList.remove('active');
+            }
+
+            // ===== ПРИЗ / ФОРМА =====
+            function rerollWinner() {
+                if (isWinnerConfirmed) { alert('победитель подтверждён'); return; }
+                if (participants.length === 0) { alert('нет участников'); return; }
+                const avail = participants.filter(p => p.username !== currentWinner);
+                if (avail.length === 0) { alert('нет других участников'); return; }
+                setWinner(avail[Math.floor(Math.random() * avail.length)].username);
+            }
+            function confirmWinner() {
+                if (!currentWinner) { alert('выберите победителя'); return; }
+                isWinnerConfirmed = true;
+                prizeFormDiv.classList.add('active');
+                winnerActionsDiv.style.display = 'none';
+                confirmedPrizeDiv.classList.remove('active');
+                prizeAmountInput.focus();
+            }
+            function selectSite(name) {
+                selectedSite = name;
+                document.querySelectorAll('.site-btn').forEach(b => {
+                    if (b.getAttribute('data-site') === name) b.classList.add('selected');
+                    else b.classList.remove('selected');
+                });
+            }
+            function confirmPrize() {
+                const site = selectedSite;
+                const amount = prizeAmountInput.value.trim();
+                const tg = tgUsernameInput.value.trim();
+                if (!site) { alert('выберите сайт'); return; }
+                if (!amount || isNaN(amount) || Number(amount) <= 0) { alert('неверная сумма'); return; }
+                const newWinner = { id: Date.now(), username: currentWinner, tgUsername: tg, site, amount: Number(amount), withdrawn: 0, timestamp: Date.now() };
+                winners.push(newWinner);
+                saveWinnersToStorage();
+                confirmedPrizeTextSpan.textContent = `@${currentWinner} · ${site} · ${amount}₽${tg ? ' · tg: ' + tg : ''}`;
+                confirmedPrizeDiv.classList.add('active');
+                prizeFormDiv.classList.remove('active');
+                addLogEntry(`✅ приз подтверждён: @${currentWinner} · ${amount}₽`, 'winner');
+                tgUsernameInput.value = '';
+                prizeAmountInput.value = '';
+                selectedSite = '';
+                document.querySelectorAll('.site-btn').forEach(b => b.classList.remove('selected'));
+                renderWinners();
+                updateStats();
+                currentWinner = null;
+                winnerDisplayDiv.style.display = 'none';
+                winnerMessagesDiv.innerHTML = '<div class="empty-state">победитель не выбран</div>';
+                isWinnerConfirmed = false;
+            }
+            function editWinner(id) {
+                const f = document.getElementById(`editForm-${id}`);
+                if (f) f.style.display = f.style.display === 'none' ? 'block' : 'none';
+            }
+            function saveWinner(id) {
+                const tgI = document.getElementById(`editTgUsername-${id}`);
+                const siteI = document.getElementById(`editSite-${id}`);
+                const amountI = document.getElementById(`editAmount-${id}`);
+                const withdrawnI = document.getElementById(`editWithdrawn-${id}`);
+                const idx = winners.findIndex(w => w.id === id);
+                if (idx === -1) return;
+                winners[idx].tgUsername = tgI.value.trim();
+                winners[idx].site = siteI.value.trim();
+                winners[idx].amount = Number(amountI.value) || 0;
+                if (withdrawnI.value && !isNaN(withdrawnI.value)) winners[idx].withdrawn = Number(withdrawnI.value);
+                saveWinnersToStorage();
+                renderWinners();
+                updateStats();
+            }
+            function deleteWinner(id) {
+                if (!confirm('удалить?')) return;
+                winners = winners.filter(w => w.id !== id);
+                saveWinnersToStorage();
+                renderWinners();
+                updateStats();
+            }
+
+            // ===== МОНЕТКА =====
+            function flipCoin() {
+                if (coinAnimating) return;
+                coinAnimating = true;
+                const result = Math.random() < 0.5 ? 'like' : 'dislike';
+                coinResultDiv.style.display = 'flex';
+                coinAnimationSpan.style.animation = 'none';
+                coinAnimationSpan.offsetHeight;
+                coinAnimationSpan.style.animation = 'coinFlip 1s ease-in-out';
+                if (result === 'like') coinTextureSpan.classList.remove('dislike');
+                else coinTextureSpan.classList.add('dislike');
+                addLogEntry(`🪙 монетка: ${result === 'like' ? 'лайк' : 'дизлайк'}`);
+                setTimeout(() => { coinAnimating = false; }, 1000);
+            }
+
+            // ===== ПОДКЛЮЧЕНИЕ К TWITCH =====
+            function connectToTwitchChat() {
+                if (ws && ws.readyState === WebSocket.OPEN) { setConnectionStatus('connected'); return; }
+                setConnectionStatus('connecting');
+                connectBtn.disabled = true;
+                channelName = channelInput.value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
+                if (!channelName) { channelName = 'kiri4ch14'; channelInput.value = channelName; }
+                channelNameSpan.textContent = channelName;
+                try { ws = new WebSocket('wss://irc-ws.chat.twitch.tv:443'); }
+                catch(e) { setConnectionStatus('error'); connectBtn.disabled = false; addLogEntry('ошибка подключения', 'error'); return; }
+                ws.onopen = function() {
+                    setConnectionStatus('connected');
+                    connectBtn.disabled = false;
+                    ws.send('CAP REQ :twitch.tv/tags twitch.tv/commands');
+                    ws.send('PASS SCHMOOPIIE');
+                    ws.send('NICK justinfan' + Math.floor(Math.random() * 99999));
+                    ws.send('JOIN #' + channelName);
+                    addLogEntry(`✅ подключено к #${channelName}`, 'winner');
+                };
+                ws.onmessage = function(event) {
+                    const lines = event.data.split('\r\n');
+                    lines.forEach(line => {
+                        if (!line.trim()) return;
+                        if (line.startsWith('PING')) { ws.send('PONG :tmi.twitch.tv'); return; }
+                        if (line.includes('PRIVMSG')) {
+                            const m = line.match(/display-name=([^;]*)/);
+                            const username = m ? m[1] : 'unknown';
+                            const mm = line.match(/PRIVMSG #\w+ :(.*)/);
+                            if (mm) {
+                                const msg = mm[1];
+                                if (msg.startsWith('\u0001ACTION')) return;
+                                addChatMessage(username, msg, false);
+                            }
+                        }
+                    });
+                };
+                ws.onerror = function() { setConnectionStatus('error'); connectBtn.disabled = false; };
+                ws.onclose = function() { setConnectionStatus('disconnected'); ws = null; connectBtn.disabled = false; };
+            }
+
+            // ===== UPTIME =====
+            setInterval(() => {
+                const elapsed = Math.floor((Date.now() - uptimeStart) / 1000);
+                const h = String(Math.floor(elapsed / 3600)).padStart(2, '0');
+                const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
+                const s = String(elapsed % 60).padStart(2, '0');
+                $('uptimeText').textContent = `${h}:${m}:${s}`;
+            }, 1000);
+
+            // ===== ОБРАБОТЧИКИ =====
+            sendMessageBtn.addEventListener('click', () => {
+                const u = userNameInput.value.trim();
+                const t = messageInput.value.trim();
+                if (!u || !t) return;
+                addChatMessage(u, t, false);
+                messageInput.value = codeWord;
+                userNameInput.focus();
+            });
+            messageInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendMessageBtn.click(); });
+            userNameInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendMessageBtn.click(); });
+            codeWordInput.addEventListener('change', e => {
+                const n = e.target.value.trim();
+                if (n) { codeWord = n; messageInput.value = n; }
+                else e.target.value = codeWord;
+            });
+            channelInput.addEventListener('keypress', e => { if (e.key === 'Enter') connectToTwitchChat(); });
+            connectBtn.addEventListener('click', connectToTwitchChat);
+            pickWinnerBtn.addEventListener('click', showWinnerModal);
+            rerollBtn.addEventListener('click', rerollWinner);
+            confirmWinnerBtn.addEventListener('click', confirmWinner);
+            checkWinnerBtn.addEventListener('click', checkWinner);
+            confirmPrizeBtn.addEventListener('click', confirmPrize);
+            coinFlipBtn.addEventListener('click', flipCoin);
+            resetGiveawayBtn.addEventListener('click', resetGiveaway);
+            spinButton.addEventListener('click', spinRoulette);
+            zoneStartBtn.addEventListener('click', startZoneGame);
+            zoneCloseBtn.addEventListener('click', closeZoneMode);
+            brStartBtn.addEventListener('click', startBattleRoyal);
+            brCloseBtn.addEventListener('click', closeBattleRoyal);
+            brResetBtn.addEventListener('click', () => {
+                brRunning = false; brDone = false;
+                brFighters = []; brPickups = []; brObstacles = [];
+                brWinnerName.textContent = '';
+                brStatusText.textContent = 'нажмите "начать битву"';
+                brT = 0; brLast = 0;
+                brZone = { r: 2, targetR: 2, cx: 0.5, cy: 0.5, active: false, startDelay: 10 };
+                brAnimActive = true;
+                brStartBtn.disabled = false;
+                brDraw();
+            });
+            mazeStartBtn.addEventListener('click', startMaze);
+            mazeCloseBtn.addEventListener('click', closeMazeMode);
+            raceStartBtn.addEventListener('click', startRace);
+            raceCloseBtn.addEventListener('click', closeRaceMode);
+
+            gtStartBtn.addEventListener('click', gtStart);
+            gtPauseBtn.addEventListener('click', gtPause);
+            gtResetBtn.addEventListener('click', gtReset);
+            tmStartBtn.addEventListener('click', tmStart);
+            tmPauseBtn.addEventListener('click', tmPause);
+            tmResetBtn.addEventListener('click', tmReset);
+
+            winnersListDiv.addEventListener('click', e => {
+                const t = e.target.closest('button');
+                if (!t) return;
+                const a = t.getAttribute('data-action');
+                const id = Number(t.getAttribute('data-id'));
+                if (a === 'edit') editWinner(id);
+                else if (a === 'delete') deleteWinner(id);
+                else if (a === 'save') saveWinner(id);
+            });
+            siteListDiv.addEventListener('click', e => {
+                const t = e.target.closest('.site-btn');
+                if (!t) return;
+                selectSite(t.getAttribute('data-site'));
+            });
+
+            window.addEventListener('resize', () => {
+                if (zoneOverlay.classList.contains('active')) resizeZoneCanvas();
+                if (battleOverlay.classList.contains('active')) { resizeBrCanvas(); if (!brRunning) brDraw(); }
+                if (mazeOverlay.classList.contains('active')) resizeMazeCanvas();
+                if (raceOverlay.classList.contains('active')) { resizeRaceCanvas(); const r = generateRaceTrack(raceCanvas.width, raceCanvas.height); raceTrack = r.track; raceTotalLength = r.total; }
+            });
+            window.addEventListener('orientationchange', () => {
+                setTimeout(() => {
+                    if (zoneOverlay.classList.contains('active')) resizeZoneCanvas();
+                    if (battleOverlay.classList.contains('active')) { resizeBrCanvas(); if (!brRunning) brDraw(); }
+                    if (mazeOverlay.classList.contains('active')) resizeMazeCanvas();
+                    if (raceOverlay.classList.contains('active')) { resizeRaceCanvas(); const r = generateRaceTrack(raceCanvas.width, raceCanvas.height); raceTrack = r.track; raceTotalLength = r.total; }
+                }, 200);
+            });
+
+            window.pickRandomWinner = pickRandomWinner;
+            window.pickNonWinner = pickNonWinner;
+            window.openRoulette = openRoulette;
+            window.openZoneMode = openZoneMode;
+            window.openBattleRoyal = openBattleRoyal;
+            window.openMazeMode = openMazeMode;
+            window.openRaceMode = openRaceMode;
+            window.closeModal = closeModal;
+
+            function init() {
+                loadWinnersFromStorage();
+                updateStats(); renderChat(); renderParticipantsBadges(); renderWinnerMessages(); renderWinners();
+                winnerDisplayDiv.style.display = 'none';
+                coinResultDiv.style.display = 'none';
+                winnerActionsDiv.style.display = 'none';
+                prizeFormDiv.classList.remove('active');
+                confirmedPrizeDiv.classList.remove('active');
+                currentWinner = null;
+                isWinnerConfirmed = false;
+                selectedSite = '';
+                resetTimer();
+                setConnectionStatus('disconnected');
+                gtReset();
+                tmReset();
+                tmDisplay.textContent = '05:00';
+                addLogEntry('готов к работе');
+            }
+            init();
+        })();
+    </script>
+</body>
+</html>
